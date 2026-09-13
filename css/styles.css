@@ -92,9 +92,19 @@ section{ padding:64px 0; }
 /* ---------- Header / Nav ---------- */
 .site-header{
   position:sticky; top:0; z-index:100;
+  border-bottom:1px solid var(--line);
+}
+/* The frosted background lives on a pseudo-element rather than directly on
+   .site-header itself. A backdrop-filter on .site-header would make it a
+   "containing block" for its position:fixed children (.nav-links, the
+   mobile nav-scrim overlay) in most browsers -- meaning the mobile menu
+   panel and its dark overlay would anchor to the header's own (short)
+   height instead of the full screen, causing the menu to visually overlap/
+   cut off partway down. Keeping the filter off .site-header avoids that. */
+.site-header::before{
+  content:''; position:absolute; inset:0; z-index:-1;
   background:rgba(246,247,251,.92);
   backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
 }
 .topbar{
   background:var(--navy-900); color:#cfd8e8; font-size:.82rem;
@@ -151,6 +161,7 @@ section{ padding:64px 0; }
     background:#fff; flex-direction:column; align-items:flex-start; gap:4px;
     padding:90px 26px 26px; box-shadow:var(--shadow-lg);
     transform:translateX(100%); transition:.25s ease; overflow-y:auto;
+    z-index:95; /* above .nav-scrim, so its own links stay tappable */
   }
   .nav-links.open{ transform:translateX(0); }
   .nav-links > a{ width:100%; padding:12px 0; border-bottom:1px solid var(--line); }
@@ -336,26 +347,33 @@ textarea{ resize:vertical; min-height:130px; }
 .case-card-body h3{ font-size:1.05rem; margin-bottom:6px; }
 .case-card-body p{ font-size:.86rem; color:var(--ink-soft); line-height:1.5; }
 
-/* ---------- Gallery: video placeholders ---------- */
+/* ---------- Gallery: video cards ---------- */
 .video-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px; }
-.video-card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); }
-.video-card-media{
-  position:relative; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--navy-900), var(--navy-700));
+.video-card{
+  appearance:none; -webkit-appearance:none;
+  display:flex; flex-direction:column; align-items:stretch; text-align:left; background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; box-shadow:var(--shadow-sm); cursor:pointer; font-family:inherit; padding:0; margin:0; width:100%; transition:transform .18s ease, box-shadow .18s ease;
 }
+.video-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+.video-card-media{ flex:none; position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--navy-900); }
+.video-card-media img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .25s ease; }
+.video-card:hover .video-card-media img{ transform:scale(1.05); }
+.video-card-media::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,16,30,.05), rgba(8,16,30,.5)); }
 .play-btn{
-  width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.14); backdrop-filter:blur(2px);
-  display:flex; align-items:center; justify-content:center; color:#fff; border:1.5px solid rgba(255,255,255,.4);
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1;
+  width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.16); backdrop-filter:blur(2px);
+  display:flex; align-items:center; justify-content:center; color:#fff; border:1.5px solid rgba(255,255,255,.5);
 }
 .play-btn svg{ width:22px; height:22px; margin-left:3px; }
-.video-badge{
-  position:absolute; left:10px; top:10px; background:var(--gold-500); color:#26170a;
-  font-size:.72rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; padding:5px 10px; border-radius:999px;
-}
-.video-card-body{ padding:16px 18px 20px; }
-.video-card-body h3{ font-size:1.05rem; margin-bottom:6px; }
-.video-card-body p{ font-size:.86rem; color:var(--ink-soft); line-height:1.5; }
+.video-card-body{ padding:16px 18px 20px; flex:1; }
+.video-card-body h3{ font-size:1.02rem; line-height:1.45; }
 .video-note{ text-align:center; color:var(--ink-faint); font-size:.9rem; margin-top:24px; }
+.video-note a{ color:var(--navy-800); font-weight:600; text-decoration:underline; }
+.lightbox-video-wrap{ position:relative; width:min(900px,92vw); aspect-ratio:16/9; border-radius:10px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.5); background:#000; }
+.lightbox-video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.lightbox-video-wrap video{ position:absolute; inset:0; width:100%; height:100%; border:0; background:#000; }
+.video-card-media.no-thumb{ display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, var(--navy-900), var(--navy-700)); }
+.video-card-media.no-thumb .play-btn{ position:static; transform:none; }
 
 /* ---------- Lightbox ---------- */
 .lightbox{ position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; }
