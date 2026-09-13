@@ -585,6 +585,13 @@ def page(title, description, active, body, prefix="", extra_head="", show_splash
 <link rel="apple-touch-icon" href="{prefix}images/apple-touch-icon.png">
 <link rel="manifest" href="{prefix}manifest.json">
 <meta name="theme-color" content="#0c1c33">
+<script>
+if ('serviceWorker' in navigator) {{
+  window.addEventListener('load', function () {{
+    navigator.serviceWorker.register('{prefix}sw.js').catch(function () {{}});
+  }});
+}}
+</script>
 <link rel="stylesheet" href="{prefix}css/styles.css">
 <script>window.CMS_PREFIX = "{prefix}";</script>
 {splash_guard}
