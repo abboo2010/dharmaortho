@@ -598,6 +598,172 @@
   }
 
   // ---------------------------------------------------------------------
+  // Tab: Gallery Videos (list) — each video is either a YouTube link or an
+  // uploaded video file (source: 'youtube' | 'upload')
+  // ---------------------------------------------------------------------
+
+  function extractYouTubeId(input) {
+    var s = String(input || '').trim();
+    var m = s.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    if (/^[a-zA-Z0-9_-]{11}$/.test(s)) return s; // a bare video id, typed directly
+    return null;
+  }
+
+  // Best-effort only: if this fails (offline, blocked, etc.) the video is still
+  // added, just with a placeholder title the admin can edit right away.
+  function fetchYouTubeTitle(youtubeId) {
+    return fetch('https://noembed.com/embed?url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + youtubeId))
+      .then(function (r) { return r.json(); })
+      .then(function (j) { return (j && j.title) || ''; })
+      .catch(function () { return ''; });
+  }
+
+  // Video files are uploaded straight to Supabase Storage from the browser via a
+  // short-lived signed URL (see netlify/functions/cms-video-upload-url.js) — the
+  // file's bytes never pass through a Netlify Function, avoiding its payload
+  // size limits, which matters for video in a way it didn't for images.
+  function uploadVideo(file) {
+    return authHeader().then(function (headers) {
+      return fetch('/.netlify/functions/cms-video-upload-url', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
+        body: JSON.stringify({ filename: file.name, contentType: file.type }),
+      }).then(function (r) {
+        return r.json().then(function (j) {
+          if (!r.ok) throw new Error(j.error || 'Could not prepare upload');
+          return j;
+        });
+      });
+    }).then(function (prep) {
+      return sb.storage.from('dharmaortho-media').uploadToSignedUrl(prep.path, prep.token, file, { contentType: file.type })
+        .then(function (res) {
+          if (res.error) throw res.error;
+          return { url: prep.publicUrl };
+        });
+    });
+  }
+
+  function renderGalleryVideos() {
+    var items = (CONTENT.gallery_videos || []).slice().sort(function (a, b) { return a.sort_order - b.sort_order; });
+    mainEl.innerHTML = '';
+    mainEl.appendChild(el('h2', { text: 'Gallery Videos' }));
+    mainEl.appendChild(el('p', { class: 'hint', text: 'The Video Gallery tab on the Gallery page. Add a video either by pasting an online link (e.g. a YouTube URL) or by uploading a video file from your computer.' }));
+
+    var listWrap = el('div', {});
+    if (!items.length) listWrap.appendChild(el('p', { class: 'empty-note', text: 'No videos yet — add one below.' }));
+
+    items.forEach(function (v, idx) {
+      var titleInput = textInput(v.title);
+      var thumbUrl = textInput(v.thumbnail_url);
+      var itemCard = el('div', { class: 'list-item' });
+
+      var preview;
+      if (v.source === 'upload' && v.video_url) {
+        preview = el('video', { src: v.video_url, controls: 'controls', preload: 'metadata', style: 'width:220px;max-width:100%;border-radius:8px;display:block;margin:8px 0;background:#000;' });
+      } else {
+        var thumbSrc = v.thumbnail_url || (v.youtube_id ? ('https://i.ytimg.com/vi/' + v.youtube_id + '/hqdefault.jpg') : '');
+        preview = el('img', { src: thumbSrc, style: 'width:220px;max-width:100%;border-radius:8px;display:block;margin:8px 0;' });
+      }
+
+      itemCard.appendChild(el('div', { class: 'list-item-head' }, [
+        el('span', { class: 'title', text: (v.source === 'upload' ? '\u{1F4C1} ' : '▶️ ') + (v.title || '(untitled video)') }),
+        el('div', { class: 'list-item-actions' }, [
+          el('button', { class: 'btn btn-outline btn-sm', text: '↑', onclick: function () { moveItem('gallery_videos', items, idx, -1); } }),
+          el('button', { class: 'btn btn-outline btn-sm', text: '↓', onclick: function () { moveItem('gallery_videos', items, idx, 1); } }),
+          el('button', { class: 'btn btn-danger btn-sm', text: 'Delete', onclick: function () {
+            if (!confirm('Delete "' + (v.title || 'this video') + '" from the Video Gallery?')) return;
+            crud('gallery_videos', 'delete', { id: v.id }).then(loadContentAndRender);
+          } }),
+        ]),
+      ]));
+      itemCard.appendChild(el('p', { class: 'hint', style: 'margin:0 0 4px;', text: v.source === 'upload' ? 'Uploaded video file' : 'Online link (YouTube)' }));
+      itemCard.appendChild(preview);
+      itemCard.appendChild(field('Title (shown under the thumbnail and in the player)', titleInput));
+      if (v.source === 'upload') {
+        var thumbFile = el('input', { type: 'file', accept: 'image/*' });
+        itemCard.appendChild(field('Thumbnail image URL (optional — shown on the video card)', thumbUrl));
+        itemCard.appendChild(field('Or upload a thumbnail photo', thumbFile));
+        thumbFile.addEventListener('change', function () {
+          if (!thumbFile.files[0]) return;
+          statusMsg(itemCard, 'Uploading thumbnail…');
+          uploadImage(thumbFile.files[0], 'videos').then(function (res) {
+            thumbUrl.value = res.url;
+            statusMsg(itemCard, 'Thumbnail uploaded — remember to Save.');
+          }).catch(function (e) { statusMsg(itemCard, e.message, true); });
+        });
+      }
+
+      itemCard.appendChild(el('div', { class: 'save-bar' }, [
+        el('button', { class: 'btn btn-primary btn-sm', text: 'Save', onclick: function () {
+          crud('gallery_videos', 'update', { id: v.id, data: { title: titleInput.value, thumbnail_url: thumbUrl.value } })
+            .then(function () { statusMsg(itemCard, 'Saved.'); loadContentAndRender(); })
+            .catch(function (e) { statusMsg(itemCard, e.message, true); });
+        } }),
+        el('span', { class: 'save-status' }),
+      ]));
+      listWrap.appendChild(itemCard);
+    });
+
+    mainEl.appendChild(listWrap);
+
+    // ---- Add a video ----
+    var addCard = el('div', { class: 'card' });
+    addCard.appendChild(el('h3', { text: 'Add a video' }));
+
+    addCard.appendChild(el('div', { style: 'font-size:.92rem;font-weight:700;color:var(--navy-900);margin-bottom:8px;' , text: 'Option A — Paste an online link (e.g. YouTube)' }));
+    var linkInput = textInput('');
+    addCard.appendChild(el('div', { class: 'row' }, [field('Video link', linkInput)]));
+    var addLinkBtn = el('button', { class: 'btn btn-gold', text: '+ Add from Link', onclick: function () {
+      var ytId = extractYouTubeId(linkInput.value);
+      if (!ytId) { alert('Please paste a valid YouTube video link, e.g. https://www.youtube.com/watch?v=VIDEO_ID'); return; }
+      addLinkBtn.disabled = true;
+      addLinkBtn.textContent = 'Adding…';
+      fetchYouTubeTitle(ytId).then(function (title) {
+        return crud('gallery_videos', 'create', {
+          data: { source: 'youtube', youtube_id: ytId, video_url: '', thumbnail_url: '', title: title || 'New video', sort_order: items.length },
+        });
+      }).then(function () {
+        linkInput.value = '';
+        loadContentAndRender();
+      }).catch(function (e) {
+        addLinkBtn.disabled = false;
+        addLinkBtn.textContent = '+ Add from Link';
+        alert(e.message);
+      });
+    } });
+    addCard.appendChild(addLinkBtn);
+
+    addCard.appendChild(el('div', { style: 'font-size:.92rem;font-weight:700;color:var(--navy-900);margin:24px 0 8px;', text: 'Option B — Upload a video file from your computer' }));
+    addCard.appendChild(el('p', { class: 'hint', style: 'margin:0 0 8px;', text: 'MP4, WebM, MOV or OGG. Larger files take longer to upload. Your Supabase project also has its own maximum upload size (Project Settings → Storage) — raise it there first if a big video fails to upload.' }));
+    var fileInput = el('input', { type: 'file', accept: 'video/mp4,video/webm,video/quicktime,video/ogg' });
+    var uploadStatus = el('span', { class: 'save-status' });
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
+      if (!file) return;
+      uploadStatus.className = 'save-status';
+      uploadStatus.textContent = 'Uploading video… this can take a while for larger files.';
+      uploadVideo(file).then(function (res) {
+        var title = file.name.replace(/\.[^.]+$/, '');
+        return crud('gallery_videos', 'create', {
+          data: { source: 'upload', youtube_id: '', video_url: res.url, thumbnail_url: '', title: title, sort_order: items.length },
+        });
+      }).then(function () {
+        fileInput.value = '';
+        uploadStatus.textContent = '';
+        loadContentAndRender();
+      }).catch(function (e) {
+        uploadStatus.className = 'save-status error';
+        uploadStatus.textContent = e.message;
+      });
+    });
+    addCard.appendChild(el('div', { class: 'row' }, [field('Video file', fileInput)]));
+    addCard.appendChild(uploadStatus);
+
+    mainEl.appendChild(addCard);
+  }
+
+  // ---------------------------------------------------------------------
   // Tab: Contact (singleton)
   // ---------------------------------------------------------------------
 
@@ -665,7 +831,7 @@
   // Tab switching + content loading
   // ---------------------------------------------------------------------
 
-  var RENDERERS = { hero: renderHero, about: renderAbout, timeline: renderTimeline, services: renderServices, gallery: renderGallery, contact: renderContact };
+  var RENDERERS = { hero: renderHero, about: renderAbout, timeline: renderTimeline, services: renderServices, gallery: renderGallery, 'gallery-videos': renderGalleryVideos, contact: renderContact };
 
   sidebar.addEventListener('click', function (e) {
     var btn = e.target.closest('button[data-tab]');
