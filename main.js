@@ -363,13 +363,31 @@ ready(function () {
   if (videoDataEl && videoLightbox) {
     var videos = JSON.parse(videoDataEl.textContent);
     var vIframe = document.getElementById('video-lightbox-iframe');
+    var vNative = document.getElementById('video-lightbox-native');
     var vTitle = document.getElementById('video-lightbox-title');
     var vCount = document.getElementById('video-lightbox-count');
     var vIndex = 0;
 
     function renderVideoLightbox() {
       var v = videos[vIndex];
-      vIframe.src = 'https://www.youtube-nocookie.com/embed/' + v.id + '?autoplay=1&rel=0';
+      // Videos added via the CMS as an uploaded file (source:"upload") play with a
+      // native <video> tag; everything else (source:"youtube", or older data with no
+      // "source" at all) plays as a YouTube privacy-enhanced embed, keyed by v.id.
+      if (v.source === 'upload' && v.video_url) {
+        vIframe.src = '';
+        vIframe.hidden = true;
+        vNative.src = v.video_url;
+        vNative.hidden = false;
+        vNative.play().catch(function () {});
+      } else {
+        vNative.pause();
+        vNative.src = '';
+        vNative.hidden = true;
+        vIframe.hidden = false;
+        // v.youtube_id is set by the CMS-driven data shape; the static build.py
+        // fallback data has no youtube_id field at all and uses v.id directly instead.
+        vIframe.src = 'https://www.youtube-nocookie.com/embed/' + (v.youtube_id || v.id) + '?autoplay=1&rel=0';
+      }
       vTitle.textContent = v.title;
       vCount.textContent = (vIndex + 1) + ' / ' + videos.length;
     }
@@ -389,6 +407,8 @@ ready(function () {
     function closeVideoLightbox() {
       videoLightbox.hidden = true;
       vIframe.src = '';
+      vNative.pause();
+      vNative.src = '';
       body.style.overflow = '';
     }
 

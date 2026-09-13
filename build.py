@@ -939,7 +939,7 @@ def gallery_body():
     </div>
 
     <div class="gallery-panel" data-panel="videos" hidden>
-      <div class="video-grid">
+      <div class="video-grid" id="gallery-video-grid">
         {video_cards}
       </div>
       <p class="video-note">More clinical videos are added regularly on our <a href="{YOUTUBE_CHANNEL}" target="_blank" rel="noopener">YouTube channel</a> — subscribe to stay updated.</p>
@@ -972,7 +972,10 @@ def gallery_body():
   <div class="lightbox-inner">
     <button class="lightbox-close" type="button" data-close="1" aria-label="Close">{icon_svg('close')}</button>
     <button class="lightbox-prev" type="button" aria-label="Previous video">{icon_svg('chevron')}</button>
-    <div class="lightbox-video-wrap"><iframe id="video-lightbox-iframe" src="" title="Video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    <div class="lightbox-video-wrap">
+      <iframe id="video-lightbox-iframe" src="" title="Video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <video id="video-lightbox-native" controls playsinline hidden></video>
+    </div>
     <button class="lightbox-next" type="button" aria-label="Next video">{icon_svg('chevron')}</button>
     <div class="lightbox-caption">
       <span class="lightbox-title" id="video-lightbox-title"></span>
