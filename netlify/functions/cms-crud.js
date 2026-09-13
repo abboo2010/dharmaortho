@@ -4,7 +4,7 @@
 // successfully-authenticated user is treated as an admin.
 //
 // Request body (POST, JSON): { collection, op, id?, data?, order? }
-//   collection: 'hero' | 'about' | 'contact' | 'timeline' | 'services' | 'gallery'
+//   collection: 'hero' | 'about' | 'contact' | 'timeline' | 'services' | 'gallery' | 'gallery_videos'
 //   op:
 //     'update'  — singleton: { data }               list: { id, data }
 //     'create'  — list only: { data }
@@ -44,6 +44,14 @@ const COLLECTIONS = {
   gallery: {
     table: 'cms_gallery_cases', type: 'list', idField: 'slug', autoId: false,
     fields: ['slug', 'title', 'description', 'images', 'sort_order'],
+  },
+  gallery_videos: {
+    table: 'cms_gallery_videos', type: 'list', idField: 'id', autoId: true,
+    // source: 'youtube' | 'upload'. For 'youtube', youtube_id is the 11-char video id
+    // (extracted client-side from the pasted URL); for 'upload', video_url is the
+    // public Supabase Storage URL from cms-video-upload-url.js. thumbnail_url is
+    // optional in both cases — YouTube videos default to their own thumbnail.
+    fields: ['source', 'youtube_id', 'video_url', 'thumbnail_url', 'title', 'sort_order'],
   },
 };
 

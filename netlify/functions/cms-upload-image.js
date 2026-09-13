@@ -51,7 +51,7 @@ exports.handler = async function (event) {
     return json(400, { error: 'Image must be between 1 byte and 8MB' });
   }
 
-  const safeFolder = ['hero', 'about', 'gallery'].indexOf(folder) !== -1 ? folder : 'misc';
+  const safeFolder = ['hero', 'about', 'gallery', 'videos'].indexOf(folder) !== -1 ? folder : 'misc';
   const path = `${safeFolder}/${Date.now()}-${safeName(filename)}`;
 
   try {
