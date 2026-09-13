@@ -582,6 +582,9 @@ def page(title, description, active, body, prefix="", extra_head="", show_splash
 <title>{title}</title>
 <meta name="description" content="{description}">
 <link rel="icon" type="image/png" href="{prefix}images/favicon.png">
+<link rel="apple-touch-icon" href="{prefix}images/apple-touch-icon.png">
+<link rel="manifest" href="{prefix}manifest.json">
+<meta name="theme-color" content="#0c1c33">
 <link rel="stylesheet" href="{prefix}css/styles.css">
 <script>window.CMS_PREFIX = "{prefix}";</script>
 {splash_guard}
