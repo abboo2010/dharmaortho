@@ -1,5 +1,19 @@
 // Dr. Dharmalingam Muthiah — site scripts (mobile nav + dropdown handling)
-document.addEventListener('DOMContentLoaded', function () {
+//
+// This file is loaded by js/cms-loader.js AFTER it applies any live CMS
+// content, which usually happens well after DOMContentLoaded has already
+// fired (fetch is async). ready() below runs the init immediately in that
+// case, instead of registering a DOMContentLoaded listener that would never
+// fire again.
+function ready(fn) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fn);
+  } else {
+    fn();
+  }
+}
+
+ready(function () {
   var toggle = document.querySelector('.nav-toggle');
   var navLinks = document.querySelector('.nav-links');
   var scrim = document.querySelector('.nav-scrim');

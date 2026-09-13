@@ -1,0 +1,12 @@
+{
+  "name": "dharmaortho-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "dharmaortho.my — static site (build.py) + Supabase-backed CMS (Netlify Functions)",
+  "scripts": {
+    "build": "python3 build.py"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  }
+}

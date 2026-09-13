@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Manager | Dr. Dharmalingam Muthiah</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<style>
+  :root{
+    --navy-900:#0c1c33; --navy-800:#11294b; --navy-700:#1a3a63;
+    --gold-600:#b3843f; --gold-500:#c99a4f; --gold-100:#f6ecdb;
+    --cream:#f6f7fb; --cream-deep:#eef1f7; --ink:#152238; --ink-soft:#4d5a70; --ink-faint:#8a93a6;
+    --line:#e2e6ee; --danger:#c0392b; --ok:#1f8a4c;
+    --radius:12px;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  body{ margin:0; font-family:'Segoe UI', Arial, sans-serif; background:var(--cream); color:var(--ink); }
+  a{ color:inherit; }
+  .topbar{ background:var(--navy-900); color:#fff; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .topbar-brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
+  .topbar-brand img{ width:32px; height:32px; border-radius:50%; background:#fff; }
+  .topbar-user{ font-size:.85rem; color:#cfd8e8; display:flex; align-items:center; gap:12px; }
+  .btn{ border:none; border-radius:8px; padding:9px 16px; font-size:.88rem; font-weight:600; cursor:pointer; }
+  .btn-primary{ background:var(--navy-800); color:#fff; }
+  .btn-primary:hover{ background:var(--navy-700); }
+  .btn-gold{ background:var(--gold-500); color:#26170a; }
+  .btn-gold:hover{ background:var(--gold-600); }
+  .btn-outline{ background:#fff; border:1px solid var(--line); color:var(--ink); }
+  .btn-outline:hover{ background:var(--cream-deep); }
+  .btn-danger{ background:#fdecea; color:var(--danger); }
+  .btn-danger:hover{ background:#fbdedb; }
+  .btn:disabled{ opacity:.55; cursor:not-allowed; }
+  .btn-sm{ padding:6px 10px; font-size:.78rem; }
+
+  /* ---- Login screen ---- */
+  #login-screen{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .login-card{ background:#fff; border-radius:var(--radius); box-shadow:0 20px 60px rgba(17,41,75,.16); padding:40px; width:100%; max-width:380px; text-align:center; }
+  .login-card img{ width:64px; height:64px; border-radius:50%; margin-bottom:14px; }
+  .login-card h1{ font-size:1.25rem; margin:0 0 4px; color:var(--navy-900); }
+  .login-card p.sub{ font-size:.85rem; color:var(--ink-faint); margin:0 0 22px; }
+  .field{ text-align:left; margin-bottom:14px; }
+  .field label{ display:block; font-size:.8rem; font-weight:600; margin-bottom:5px; color:var(--ink-soft); }
+  .field input, .field textarea, .field select{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:.92rem; font-family:inherit;
+  }
+  .field textarea{ resize:vertical; min-height:70px; }
+  #login-error{ color:var(--danger); font-size:.85rem; margin:10px 0 0; min-height:1.2em; }
+
+  /* ---- App shell ---- */
+  #app-screen{ display:none; }
+  .layout{ display:flex; min-height:calc(100vh - 60px); }
+  .sidebar{ width:220px; flex:none; background:#fff; border-right:1px solid var(--line); padding:18px 0; }
+  .sidebar button{
+    display:block; width:100%; text-align:left; background:none; border:none; padding:12px 22px;
+    font-size:.92rem; color:var(--ink-soft); cursor:pointer; border-left:3px solid transparent;
+  }
+  .sidebar button:hover{ background:var(--cream-deep); }
+  .sidebar button.active{ color:var(--navy-900); font-weight:700; border-left-color:var(--gold-500); background:var(--cream-deep); }
+  .main{ flex:1; padding:28px 32px; max-width:980px; }
+  .main h2{ margin:0 0 6px; color:var(--navy-900); }
+  .main p.hint{ color:var(--ink-faint); font-size:.88rem; margin:0 0 22px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px; margin-bottom:18px; }
+  .card h3{ margin:0 0 14px; font-size:1rem; color:var(--navy-900); }
+  .row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .row .field{ flex:1; min-width:200px; }
+  .save-bar{ display:flex; align-items:center; gap:12px; margin-top:10px; }
+  .save-status{ font-size:.82rem; color:var(--ok); }
+  .save-status.error{ color:var(--danger); }
+
+  .list-item{ border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:12px; background:#fbfbfd; }
+  .list-item-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .list-item-head .title{ font-weight:700; color:var(--navy-900); }
+  .list-item-actions{ display:flex; gap:6px; flex-wrap:wrap; }
+  .subfield-row{ display:flex; gap:8px; margin-bottom:8px; align-items:flex-start; }
+  .subfield-row textarea, .subfield-row input{ flex:1; }
+  .thumb-grid{ display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+  .thumb{ position:relative; width:96px; height:72px; border-radius:8px; overflow:hidden; border:1px solid var(--line); }
+  .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .thumb button{ position:absolute; top:2px; right:2px; background:rgba(0,0,0,.6); color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:11px; cursor:pointer; line-height:1; }
+  .checkbox-row{ display:flex; align-items:center; gap:8px; font-size:.88rem; }
+  .empty-note{ color:var(--ink-faint); font-size:.86rem; padding:14px 0; }
+  .spinner{ display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  [hidden]{ display:none !important; }
+  @media (max-width:820px){
+    .layout{ flex-direction:column; }
+    .sidebar{ width:100%; display:flex; overflow-x:auto; padding:8px; border-right:none; border-bottom:1px solid var(--line); }
+    .sidebar button{ white-space:nowrap; border-left:none; border-bottom:3px solid transparent; }
+    .sidebar button.active{ border-left-color:transparent; border-bottom-color:var(--gold-500); }
+    .main{ padding:20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <img src="/images/logo.png" alt="Dr. Dharmalingam Muthiah">
+    <h1>Content Manager</h1>
+    <p class="sub">Sign in with your staff account to edit the website.</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-primary" type="submit" style="width:100%;" id="login-btn">Sign In</button>
+      <p id="login-error"></p>
+    </form>
+    <p style="font-size:.78rem;color:var(--ink-faint);margin-top:18px;">
+      Don't have an account yet? Ask an existing admin to add you in the Supabase dashboard
+      (Authentication → Users → Add user) — see the README for the exact steps.
+    </p>
+  </div>
+</div>
+
+<div id="app-screen">
+  <div class="topbar">
+    <div class="topbar-brand"><img src="/images/logo.png" alt=""> Content Manager</div>
+    <div class="topbar-user">
+      <span id="user-email"></span>
+      <a href="/index.html" target="_blank" class="btn btn-outline btn-sm">View Site</a>
+      <button id="logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+    </div>
+  </div>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <button data-tab="hero" class="active">Home Hero</button>
+      <button data-tab="about">About Dr</button>
+      <button data-tab="timeline">Timeline</button>
+      <button data-tab="services">Services</button>
+      <button data-tab="gallery">Gallery</button>
+      <button data-tab="contact">Contact Info</button>
+    </nav>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="assets/admin-config.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

@@ -430,13 +430,13 @@ def header_html(active="", prefix="", current_slug=None):
   <div class="topbar">
     <div class="container">
       <div class="topbar-links">
-        <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener">WhatsApp {CONTACT['whatsapp']}</a>
-        <a href="{CONTACT['phone_href']}">Clinic: {CONTACT['phone']}</a>
-        <a href="mailto:{CONTACT['email']}">{CONTACT['email']}</a>
+        <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener">WhatsApp <span data-cms="contact.whatsapp_display">{CONTACT['whatsapp']}</span></a>
+        <a href="{CONTACT['phone_href']}" data-cms-href="contact.phone_href">Clinic: <span data-cms="contact.phone_display">{CONTACT['phone']}</span></a>
+        <a href="mailto:{CONTACT['email']}" data-cms-href="contact.email_mailto"><span data-cms="contact.email">{CONTACT['email']}</span></a>
       </div>
       <div class="topbar-links">
-        <a href="{CONTACT['facebook']}" target="_blank" rel="noopener" aria-label="Facebook">{icon_svg('fb')}</a>
-        <a href="{CONTACT['instagram']}" target="_blank" rel="noopener" aria-label="Instagram">{icon_svg('ig')}</a>
+        <a href="{CONTACT['facebook']}" data-cms-href="contact.facebook" target="_blank" rel="noopener" aria-label="Facebook">{icon_svg('fb')}</a>
+        <a href="{CONTACT['instagram']}" data-cms-href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram">{icon_svg('ig')}</a>
       </div>
     </div>
   </div>
@@ -454,7 +454,7 @@ def header_html(active="", prefix="", current_slug=None):
       <a href="{prefix}about.html"{cls('about')}>About Dr</a>
       <div class="has-dropdown{' open' if active=='services' else ''}">
         <a href="{prefix}services.html"{nav_services_active}>Our Services <span class="chevron">{icon_svg('chevron')}</span></a>
-        <div class="dropdown">
+        <div class="dropdown" id="nav-services-dropdown" data-prefix="{prefix}" data-current-slug="{current_slug or ''}">
           {services_dropdown_html(current_slug, prefix)}
         </div>
       </div>
@@ -505,8 +505,8 @@ def footer_html(prefix=""):
         </a>
         <p class="footer-about">Consultant Orthopaedic &amp; Trauma Surgeon at Gleneagles Hospital Kota Kinabalu, providing personalised, evidence-based orthopaedic care for patients across Sabah.</p>
         <div class="footer-social">
-          <a href="{CONTACT['facebook']}" target="_blank" rel="noopener" aria-label="Facebook">{icon_svg('fb')}</a>
-          <a href="{CONTACT['instagram']}" target="_blank" rel="noopener" aria-label="Instagram">{icon_svg('ig')}</a>
+          <a href="{CONTACT['facebook']}" data-cms-href="contact.facebook" target="_blank" rel="noopener" aria-label="Facebook">{icon_svg('fb')}</a>
+          <a href="{CONTACT['instagram']}" data-cms-href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram">{icon_svg('ig')}</a>
         </div>
       </div>
       <div class="footer-col">
@@ -520,17 +520,17 @@ def footer_html(prefix=""):
       </div>
       <div class="footer-col">
         <h4>Popular Services</h4>
-        <ul>
+        <ul id="footer-services-list" data-prefix="{prefix}">
           {service_links}
         </ul>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
         <ul>
-          <li>{'<br>'.join(CONTACT['address_lines'])}</li>
-          <li><a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener">WhatsApp {CONTACT['whatsapp']}</a></li>
-          <li><a href="{CONTACT['phone_href']}">{CONTACT['phone']}</a></li>
-          <li><a href="mailto:{CONTACT['email']}">{CONTACT['email']}</a></li>
+          <li id="footer-address-lines">{'<br>'.join(CONTACT['address_lines'])}</li>
+          <li><a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener">WhatsApp <span data-cms="contact.whatsapp_display">{CONTACT['whatsapp']}</span></a></li>
+          <li><a href="{CONTACT['phone_href']}" data-cms-href="contact.phone_href"><span data-cms="contact.phone_display">{CONTACT['phone']}</span></a></li>
+          <li><a href="mailto:{CONTACT['email']}" data-cms-href="contact.email_mailto"><span data-cms="contact.email">{CONTACT['email']}</span></a></li>
         </ul>
       </div>
     </div>
@@ -540,11 +540,11 @@ def footer_html(prefix=""):
     </div>
   </div>
 </footer>
-<a class="whatsapp-float" href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">{icon_svg('whatsapp')}</a>
+<a class="whatsapp-float" href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">{icon_svg('whatsapp')}</a>
 """.strip()
 
 
-def page(title, description, active, body, prefix="", extra_head="", show_splash=False):
+def page(title, description, active, body, prefix="", extra_head="", show_splash=False, service_slug=None):
     # Body content is authored with root-absolute-looking paths ("/images/x.jpg",
     # "/about.html", etc.) for readability; rewrite them to be relative to this
     # page's location so the same output works both deployed at a domain root
@@ -564,6 +564,7 @@ def page(title, description, active, body, prefix="", extra_head="", show_splash
   }})();
 </script>
 """.strip() if show_splash else ""
+    body_attrs = f' data-service-slug="{service_slug}"' if service_slug else ""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -573,15 +574,16 @@ def page(title, description, active, body, prefix="", extra_head="", show_splash
 <meta name="description" content="{description}">
 <link rel="icon" type="image/png" href="{prefix}images/favicon.png">
 <link rel="stylesheet" href="{prefix}css/styles.css">
+<script>window.CMS_PREFIX = "{prefix}";</script>
 {splash_guard}
 {extra_head}
 </head>
-<body>
+<body{body_attrs}>
 {splash_block}
 {header_html(active, prefix)}
 {body}
 {footer_html(prefix)}
-<script src="{prefix}js/main.js"></script>
+<script src="{prefix}js/cms-loader.js"></script>
 </body>
 </html>
 """
@@ -605,21 +607,21 @@ def home_body():
 <section class="hero">
   <div class="container">
     <div class="hero-copy">
-      <div class="eyebrow">Advanced Orthopaedic Technology</div>
-      <h1>Robotic-Assisted<br><em>Knee Replacement</em></h1>
-      <p class="lede">Experience the next generation of knee replacement surgery with the VELYS™ Robotic-Assisted Solution. Using advanced precision technology, Dr. Dharmalingam Muthiah delivers personalised treatment designed to improve implant accuracy, minimise pain and help patients return to their active lifestyle sooner.</p>
+      <div class="eyebrow" id="hero-eyebrow">Advanced Orthopaedic Technology</div>
+      <h1><span id="hero-heading-line1">Robotic-Assisted</span><br><em id="hero-heading-em">Knee Replacement</em></h1>
+      <p class="lede" id="hero-lede">Experience the next generation of knee replacement surgery with the VELYS™ Robotic-Assisted Solution. Using advanced precision technology, Dr. Dharmalingam Muthiah delivers personalised treatment designed to improve implant accuracy, minimise pain and help patients return to their active lifestyle sooner.</p>
       <div class="hero-cta">
-        <a href="/book-consultation.html" class="btn btn-gold">Book Consultation</a>
-        <a href="/services/velys-tm-robotic-assisted-robotic-assisted.html" class="btn btn-outline">Learn About VELYS™</a>
+        <a href="/book-consultation.html" class="btn btn-gold" id="hero-cta-primary">Book Consultation</a>
+        <a href="/services/velys-tm-robotic-assisted-robotic-assisted.html" class="btn btn-outline" id="hero-cta-secondary">Learn About VELYS™</a>
       </div>
       <div class="hero-stats">
-        <div><b>13+</b><span>Areas of Expertise</span></div>
-        <div><b>3</b><span>Countries of Fellowship Training</span></div>
-        <div><b>Sabah</b><span>&amp; neighbouring regions served</span></div>
+        <div><b id="hero-stat1-value">13+</b><span id="hero-stat1-label">Areas of Expertise</span></div>
+        <div><b id="hero-stat2-value">3</b><span id="hero-stat2-label">Countries of Fellowship Training</span></div>
+        <div><b id="hero-stat3-value">Sabah</b><span id="hero-stat3-label">&amp; neighbouring regions served</span></div>
       </div>
     </div>
     <div class="hero-media">
-      <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah with the VELYS Robotic-Assisted knee replacement system">
+      <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah with the VELYS Robotic-Assisted knee replacement system" id="hero-image">
     </div>
   </div>
 </section>
@@ -639,7 +641,7 @@ def home_body():
       <h2>Comprehensive Orthopaedic Care</h2>
       <p class="lede center">At our clinic, we are committed to providing comprehensive orthopaedic care using modern techniques and evidence-based treatments — restoring mobility, relieving pain and improving quality of life for patients of all ages.</p>
     </div>
-    <div class="services-grid">
+    <div class="services-grid" id="home-services-grid">
       {preview_cards}
     </div>
     <div class="center" style="margin-top:40px;">
@@ -651,7 +653,7 @@ def home_body():
 <section class="band-cream">
   <div class="container about-grid">
     <div class="about-media">
-      <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah">
+      <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah" id="home-about-photo">
     </div>
     <div>
       <div class="eyebrow">About the Specialist</div>
@@ -661,8 +663,8 @@ def home_body():
         <span class="credential-chip">FRCS (Edinburgh)</span>
         <span class="credential-chip">Orthopaedic &amp; Trauma Surgeon</span>
       </div>
-      <p>Dr. Dharmalingam Muthiah is an Orthopaedic and Trauma Surgeon specialising in Joint Replacement and Sports Reconstructive Surgery. He currently practises at the Orthopaedic &amp; Trauma Surgery Clinic, Gleneagles Hospital Kota Kinabalu, providing orthopaedic and trauma care for patients requiring specialist musculoskeletal treatment.</p>
-      <p>His clinical practice includes the assessment and management of musculoskeletal disorders, traumatic injuries, degenerative joint conditions, sports-related injuries, hand conditions and musculoskeletal tumours.</p>
+      <p id="home-about-para1">Dr. Dharmalingam Muthiah is an Orthopaedic and Trauma Surgeon specialising in Joint Replacement and Sports Reconstructive Surgery. He currently practises at the Orthopaedic &amp; Trauma Surgery Clinic, Gleneagles Hospital Kota Kinabalu, providing orthopaedic and trauma care for patients requiring specialist musculoskeletal treatment.</p>
+      <p id="home-about-para2">His clinical practice includes the assessment and management of musculoskeletal disorders, traumatic injuries, degenerative joint conditions, sports-related injuries, hand conditions and musculoskeletal tumours.</p>
       <a href="/about.html" class="btn btn-primary">More About Dr. Dharmalingam {icon_svg('arrow')}</a>
     </div>
   </div>
@@ -693,7 +695,7 @@ def home_body():
         <p>Our friendly team is ready to assist you with appointments, enquiries and information about our orthopaedic services.</p>
       </div>
       <div class="cta-actions">
-        <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat with Us</a>
+        <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat with Us</a>
         <a href="/book-consultation.html" class="btn btn-outline">Book Consultation</a>
       </div>
     </div>
@@ -709,19 +711,19 @@ def about_body():
     <div class="breadcrumb"><a href="/index.html">Home</a> / <span>About Dr</span></div>
     <div class="eyebrow">About the Specialist</div>
     <h1>Meet Dr. Dharmalingam Muthiah</h1>
-    <p class="lede" style="color:#c9d3e3;">MBBS (Malaya), FRCS (Edinburgh) — Consultant Orthopaedic &amp; Trauma Surgeon</p>
+    <p class="lede" style="color:#c9d3e3;" id="about-credentials-line">MBBS (Malaya), FRCS (Edinburgh) — Consultant Orthopaedic &amp; Trauma Surgeon</p>
   </div>
 </section>
 
 <section class="band">
   <div class="container about-grid">
     <div class="about-media">
-      <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah">
+      <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah" id="about-photo">
     </div>
     <div>
-      <p>Dr. Dharmalingam Muthiah is a highly experienced Orthopaedic and Trauma Surgeon with international training spanning joint replacement, sports reconstruction, trauma, hand surgery and microsurgery. His practice is built around modern, evidence-based orthopaedic care delivered with compassion, precision and personalised treatment.</p>
-      <p>He currently serves as Consultant Orthopaedic &amp; Trauma Surgeon at Gleneagles Hospital Kota Kinabalu, providing specialist musculoskeletal care to patients across Sabah and neighbouring regions.</p>
-      <p><b>Every patient deserves personalised care.</b> His approach is built on careful listening, clear explanations and treatment plans customised to each patient's condition and goals.</p>
+      <p id="about-bio-para1">Dr. Dharmalingam Muthiah is a highly experienced Orthopaedic and Trauma Surgeon with international training spanning joint replacement, sports reconstruction, trauma, hand surgery and microsurgery. His practice is built around modern, evidence-based orthopaedic care delivered with compassion, precision and personalised treatment.</p>
+      <p id="about-bio-para2">He currently serves as Consultant Orthopaedic &amp; Trauma Surgeon at Gleneagles Hospital Kota Kinabalu, providing specialist musculoskeletal care to patients across Sabah and neighbouring regions.</p>
+      <p><b id="about-highlight-bold">Every patient deserves personalised care.</b> <span id="about-highlight-rest">His approach is built on careful listening, clear explanations and treatment plans customised to each patient's condition and goals.</span></p>
     </div>
   </div>
 </section>
@@ -733,7 +735,7 @@ def about_body():
       <h2>Education, Fellowships &amp; Special Interests</h2>
     </div>
     <div class="card" style="padding:36px;max-width:900px;margin:0 auto;">
-      <div class="timeline">
+      <div class="timeline" id="about-timeline">
         <div class="timeline-item"><div class="place">University of Malaya</div><div>Bachelor of Medicine and Bachelor of Surgery (MBBS)</div></div>
         <div class="timeline-item"><div class="place">Edinburgh, UK</div><div>Fellow of the Royal College of Surgeons (FRCS) &mdash; Orthopaedic &amp; Trauma Surgery Specialist Certification</div></div>
         <div class="timeline-item"><div class="place">Sydney, Australia</div><div>Fellowship training in knee &amp; upper limb surgery</div></div>
@@ -751,7 +753,7 @@ def about_body():
       <div class="eyebrow center">Clinical Expertise</div>
       <h2>Areas of Practice</h2>
     </div>
-    <div class="services-index-grid">
+    <div class="services-index-grid" id="about-services-grid">
       {"".join(f'''<div class="card services-index-card"><div class="icon">{s["icon"]}</div><div><h3 style="margin-bottom:4px;font-size:1.02rem;">{s["title"]}</h3><p style="margin:0;font-size:.9rem;">{s["short"]}</p></div></div>''' for s in SERVICES)}
     </div>
   </div>
@@ -764,7 +766,7 @@ def about_body():
     <p>Dr. Dharmalingam Muthiah believes in providing patient-centred care through careful clinical assessment, clear communication and evidence-based treatment. He works closely with patients to explain their diagnosis and available treatment options, enabling informed decision-making throughout their care journey.</p>
     <div class="cta-actions" style="justify-content:center;margin-top:24px;">
       <a href="/book-consultation.html" class="btn btn-gold">Book a Consultation</a>
-      <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-outline">{icon_svg('whatsapp')} WhatsApp Us</a>
+      <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-outline">{icon_svg('whatsapp')} WhatsApp Us</a>
     </div>
   </div>
 </section>
@@ -794,7 +796,7 @@ def services_index_body():
 
 <section class="band">
   <div class="container">
-    <div class="services-index-grid">
+    <div class="services-index-grid" id="services-index-grid">
       {cards}
     </div>
   </div>
@@ -808,7 +810,7 @@ def services_index_body():
         <p>Message us on WhatsApp and our team will help point you in the right direction.</p>
       </div>
       <div class="cta-actions">
-        <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat with Us</a>
+        <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat with Us</a>
       </div>
     </div>
   </div>
@@ -829,23 +831,23 @@ def service_detail_body(s):
     return f"""
 <section class="service-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="/index.html">Home</a> / <a href="/services.html">Our Services</a> / <span>{s['title']}</span></div>
-    <div class="icon-lg">{s['icon']}</div>
-    <h1>{s['title']}</h1>
+    <div class="breadcrumb"><a href="/index.html">Home</a> / <a href="/services.html">Our Services</a> / <span id="service-breadcrumb-title">{s['title']}</span></div>
+    <div class="icon-lg" id="service-icon">{s['icon']}</div>
+    <h1 id="service-title">{s['title']}</h1>
   </div>
 </section>
 
 <section class="band">
   <div class="container service-body">
     <div>
-      {intro_html}
-      <h2 style="margin-top:36px;">{s['includes_title']}</h2>
-      <div class="service-includes">
+      <div id="service-intro">{intro_html}</div>
+      <h2 style="margin-top:36px;" id="service-includes-title">{s['includes_title']}</h2>
+      <div class="service-includes" id="service-includes">
         {includes_html}
       </div>
       <div class="closing-banner">
-        <h3>{s['closing_title']}</h3>
-        <p style="margin:0;">{s['closing_text']}</p>
+        <h3 id="service-closing-title">{s['closing_title']}</h3>
+        <p style="margin:0;" id="service-closing-text">{s['closing_text']}</p>
       </div>
     </div>
     <aside>
@@ -859,7 +861,7 @@ def service_detail_body(s):
       <div class="card sidebar-card" style="margin-top:20px;position:static;">
         <h3>Book a Consultation</h3>
         <p style="font-size:.9rem;">Speak with Dr. Dharmalingam Muthiah about your condition and treatment options.</p>
-        <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">{icon_svg('whatsapp')} WhatsApp Us</a>
+        <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">{icon_svg('whatsapp')} WhatsApp Us</a>
         <a href="/book-consultation.html" class="btn btn-primary btn-block" style="margin-top:10px;">Book Consultation</a>
       </div>
     </aside>
@@ -922,7 +924,7 @@ def gallery_body():
     </div>
 
     <div class="gallery-panel" data-panel="photos">
-      <div class="case-grid">
+      <div class="case-grid" id="gallery-case-grid">
         {case_cards}
       </div>
     </div>
@@ -937,7 +939,7 @@ def gallery_body():
     <div class="card band-cream" style="margin-top:40px;padding:36px;text-align:center;">
       <h3>Want to see more?</h3>
       <p>More case studies and patient outcomes are available on request.</p>
-      <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Ask Us on WhatsApp</a>
+      <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Ask Us on WhatsApp</a>
     </div>
   </div>
 </section>
@@ -978,23 +980,23 @@ def contact_body():
       <div class="card info-card">
         <div class="icon">{icon_svg('pin')}</div>
         <h3>Clinic Address</h3>
-        <p>Gleneagles Hospital Kota Kinabalu<br>{'<br>'.join(CONTACT['address_lines'])}</p>
+        <p>Gleneagles Hospital Kota Kinabalu<br><span id="contact-address-lines">{'<br>'.join(CONTACT['address_lines'])}</span></p>
       </div>
       <div class="card info-card">
         <div class="icon">{icon_svg('phone')}</div>
         <h3>Phone</h3>
-        <p><a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener">WhatsApp: {CONTACT['whatsapp']}</a></p>
-        <p><a href="{CONTACT['phone_href']}">Clinic: {CONTACT['phone']}</a></p>
+        <p><a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener">WhatsApp: {CONTACT['whatsapp']}</a></p>
+        <p><a href="{CONTACT['phone_href']}" data-cms-href="contact.phone_href">Clinic: {CONTACT['phone']}</a></p>
       </div>
       <div class="card info-card">
         <div class="icon">{icon_svg('mail')}</div>
         <h3>Email</h3>
-        <p><a href="mailto:{CONTACT['email']}">{CONTACT['email']}</a></p>
+        <p><a href="mailto:{CONTACT['email']}" data-cms-href="contact.email_mailto">{CONTACT['email']}</a></p>
       </div>
       <div class="card info-card">
         <div class="icon">{icon_svg('clock')}</div>
         <h3>Business Hours</h3>
-        {hours_html}
+        <div id="contact-hours">{hours_html}</div>
       </div>
     </div>
 
@@ -1018,7 +1020,7 @@ def contact_body():
       <aside class="card sidebar-card">
         <h3>Prefer WhatsApp?</h3>
         <p style="font-size:.9rem;">Our team typically responds fastest on WhatsApp for appointments and urgent enquiries.</p>
-        <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">{icon_svg('whatsapp')} Chat on WhatsApp</a>
+        <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">{icon_svg('whatsapp')} Chat on WhatsApp</a>
         <div style="margin-top:22px;border-top:1px solid var(--line);padding-top:18px;">
           <h3>Find Us</h3>
           <p style="font-size:.9rem;">Gleneagles Hospital Kota Kinabalu, Suite 02-06, Level 6, Riverson@Sembulan, Off Coastal Highway, 88100 Kota Kinabalu, Sabah.</p>
@@ -1111,7 +1113,7 @@ def booking_body():
     <div class="card band-cream" style="margin-top:28px;padding:28px 30px;text-align:center;">
       <h3 style="margin-bottom:6px;">Prefer to book by WhatsApp instead?</h3>
       <p style="font-size:.9rem;margin-bottom:16px;">Message our team directly for appointments and urgent enquiries.</p>
-      <a href="{CONTACT['whatsapp_href']}" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat on WhatsApp</a>
+      <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat on WhatsApp</a>
     </div>
   </div>
 </section>
@@ -1178,7 +1180,7 @@ def main():
         write(f"services/{s['slug']}.html", page(
             f"{s['title']} | Dr. Dharmalingam Muthiah",
             s["short"],
-            "services", service_detail_body(s), prefix="../", extra_head="",
+            "services", service_detail_body(s), prefix="../", extra_head="", service_slug=s["slug"],
         ))
 
     print(f"\nDone. Generated {6 + len(SERVICES)} pages.")

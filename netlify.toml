@@ -1,0 +1,7 @@
+[build]
+  publish = "."
+  command = "python3 build.py"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"

@@ -2,6 +2,7 @@
 <meta name="description" content="Consultant Orthopaedic & Trauma Surgeon at Gleneagles Hospital Kota Kinabalu — joint replacement, robotic-assisted knee surgery, sports reconstruction, trauma & hand surgery.">
 <link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="css/styles.css">
+<script>window.CMS_PREFIX = "";</script>
 <script>
   (function () {
     try {
@@ -28,13 +29,13 @@
   <div class="topbar">
     <div class="container">
       <div class="topbar-links">
-        <a href="https://wa.me/601136661140" target="_blank" rel="noopener">WhatsApp +60 11-3666 1140</a>
-        <a href="tel:+6088518879">Clinic: +60 88-518 879</a>
-        <a href="mailto:enquiry@dharmaortho.my">enquiry@dharmaortho.my</a>
+        <a href="https://wa.me/601136661140" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener">WhatsApp <span data-cms="contact.whatsapp_display">+60 11-3666 1140</span></a>
+        <a href="tel:+6088518879" data-cms-href="contact.phone_href">Clinic: <span data-cms="contact.phone_display">+60 88-518 879</span></a>
+        <a href="mailto:enquiry@dharmaortho.my" data-cms-href="contact.email_mailto"><span data-cms="contact.email">enquiry@dharmaortho.my</span></a>
       </div>
       <div class="topbar-links">
-        <a href="https://facebook.com/dharmaortho" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8.5H16l.5-3.5h-3V7.7c0-1 .3-1.7 1.7-1.7H16.6V2.8C16.3 2.7 15.3 2.6 14.1 2.6c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3.5H10V22h3.5Z"/></svg></a>
-        <a href="https://instagram.com/orthodm" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="https://facebook.com/dharmaortho" data-cms-href="contact.facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8.5H16l.5-3.5h-3V7.7c0-1 .3-1.7 1.7-1.7H16.6V2.8C16.3 2.7 15.3 2.6 14.1 2.6c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3.5H10V22h3.5Z"/></svg></a>
+        <a href="https://instagram.com/orthodm" data-cms-href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
       </div>
     </div>
   </div>
@@ -52,7 +53,7 @@
       <a href="about.html">About Dr</a>
       <div class="has-dropdown">
         <a href="services.html">Our Services <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></a>
-        <div class="dropdown">
+        <div class="dropdown" id="nav-services-dropdown" data-prefix="" data-current-slug="">
           <a href="services/orthopedic-and-trauma-surgery.html">🩺 Orthopaedic Trauma Surgery</a>
 <a href="services/joint-replacement-services.html">🦿 Joint Replacement Surgery</a>
 <a href="services/general-orthopaedic-services.html">🦴 General Orthopaedic Services</a>
@@ -80,21 +81,21 @@
 <section class="hero">
   <div class="container">
     <div class="hero-copy">
-      <div class="eyebrow">Advanced Orthopaedic Technology</div>
-      <h1>Robotic-Assisted<br><em>Knee Replacement</em></h1>
-      <p class="lede">Experience the next generation of knee replacement surgery with the VELYS™ Robotic-Assisted Solution. Using advanced precision technology, Dr. Dharmalingam Muthiah delivers personalised treatment designed to improve implant accuracy, minimise pain and help patients return to their active lifestyle sooner.</p>
+      <div class="eyebrow" id="hero-eyebrow">Advanced Orthopaedic Technology</div>
+      <h1><span id="hero-heading-line1">Robotic-Assisted</span><br><em id="hero-heading-em">Knee Replacement</em></h1>
+      <p class="lede" id="hero-lede">Experience the next generation of knee replacement surgery with the VELYS™ Robotic-Assisted Solution. Using advanced precision technology, Dr. Dharmalingam Muthiah delivers personalised treatment designed to improve implant accuracy, minimise pain and help patients return to their active lifestyle sooner.</p>
       <div class="hero-cta">
-        <a href="book-consultation.html" class="btn btn-gold">Book Consultation</a>
-        <a href="services/velys-tm-robotic-assisted-robotic-assisted.html" class="btn btn-outline">Learn About VELYS™</a>
+        <a href="book-consultation.html" class="btn btn-gold" id="hero-cta-primary">Book Consultation</a>
+        <a href="services/velys-tm-robotic-assisted-robotic-assisted.html" class="btn btn-outline" id="hero-cta-secondary">Learn About VELYS™</a>
       </div>
       <div class="hero-stats">
-        <div><b>13+</b><span>Areas of Expertise</span></div>
-        <div><b>3</b><span>Countries of Fellowship Training</span></div>
-        <div><b>Sabah</b><span>&amp; neighbouring regions served</span></div>
+        <div><b id="hero-stat1-value">13+</b><span id="hero-stat1-label">Areas of Expertise</span></div>
+        <div><b id="hero-stat2-value">3</b><span id="hero-stat2-label">Countries of Fellowship Training</span></div>
+        <div><b id="hero-stat3-value">Sabah</b><span id="hero-stat3-label">&amp; neighbouring regions served</span></div>
       </div>
     </div>
     <div class="hero-media">
-      <img src="images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah with the VELYS Robotic-Assisted knee replacement system">
+      <img src="images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah with the VELYS Robotic-Assisted knee replacement system" id="hero-image">
     </div>
   </div>
 </section>
@@ -114,7 +115,7 @@
       <h2>Comprehensive Orthopaedic Care</h2>
       <p class="lede center">At our clinic, we are committed to providing comprehensive orthopaedic care using modern techniques and evidence-based treatments — restoring mobility, relieving pain and improving quality of life for patients of all ages.</p>
     </div>
-    <div class="services-grid">
+    <div class="services-grid" id="home-services-grid">
       
         <a href="services/general-orthopaedic-services.html" class="card service-card">
           <div class="icon">🦴</div>
@@ -188,7 +189,7 @@
 <section class="band-cream">
   <div class="container about-grid">
     <div class="about-media">
-      <img src="images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah">
+      <img src="images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah" id="home-about-photo">
     </div>
     <div>
       <div class="eyebrow">About the Specialist</div>
@@ -198,8 +199,8 @@
         <span class="credential-chip">FRCS (Edinburgh)</span>
         <span class="credential-chip">Orthopaedic &amp; Trauma Surgeon</span>
       </div>
-      <p>Dr. Dharmalingam Muthiah is an Orthopaedic and Trauma Surgeon specialising in Joint Replacement and Sports Reconstructive Surgery. He currently practises at the Orthopaedic &amp; Trauma Surgery Clinic, Gleneagles Hospital Kota Kinabalu, providing orthopaedic and trauma care for patients requiring specialist musculoskeletal treatment.</p>
-      <p>His clinical practice includes the assessment and management of musculoskeletal disorders, traumatic injuries, degenerative joint conditions, sports-related injuries, hand conditions and musculoskeletal tumours.</p>
+      <p id="home-about-para1">Dr. Dharmalingam Muthiah is an Orthopaedic and Trauma Surgeon specialising in Joint Replacement and Sports Reconstructive Surgery. He currently practises at the Orthopaedic &amp; Trauma Surgery Clinic, Gleneagles Hospital Kota Kinabalu, providing orthopaedic and trauma care for patients requiring specialist musculoskeletal treatment.</p>
+      <p id="home-about-para2">His clinical practice includes the assessment and management of musculoskeletal disorders, traumatic injuries, degenerative joint conditions, sports-related injuries, hand conditions and musculoskeletal tumours.</p>
       <a href="about.html" class="btn btn-primary">More About Dr. Dharmalingam <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
     </div>
   </div>
@@ -230,7 +231,7 @@
         <p>Our friendly team is ready to assist you with appointments, enquiries and information about our orthopaedic services.</p>
       </div>
       <div class="cta-actions">
-        <a href="https://wa.me/601136661140" target="_blank" rel="noopener" class="btn btn-whatsapp"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.317.646 4.482 1.77 6.33L4 29l7.86-1.73A11.94 11.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3Zm0 21.818A9.78 9.78 0 0 1 10.9 23.4l-.365-.217-4.664 1.028 1.05-4.548-.238-.373A9.78 9.78 0 0 1 6.18 15c0-5.415 4.406-9.818 9.82-9.818 5.415 0 9.818 4.403 9.818 9.818 0 5.415-4.403 9.818-9.818 9.818Zm5.4-7.352c-.296-.148-1.75-.864-2.022-.963-.271-.099-.469-.148-.667.148-.198.296-.766.963-.94 1.161-.173.198-.346.223-.642.075-.296-.148-1.25-.46-2.38-1.467-.88-.785-1.474-1.754-1.647-2.05-.173-.297-.019-.457.13-.604.133-.133.297-.346.445-.52.148-.173.198-.296.297-.494.099-.198.05-.371-.025-.52-.074-.148-.667-1.608-.914-2.202-.24-.578-.485-.5-.667-.51l-.568-.01a1.09 1.09 0 0 0-.79.37c-.272.297-1.04 1.016-1.04 2.478s1.065 2.874 1.213 3.072c.148.198 2.096 3.2 5.08 4.488.71.306 1.263.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.75-.715 1.997-1.406.247-.692.247-1.285.173-1.407-.074-.123-.272-.198-.568-.346Z"/></svg> Chat with Us</a>
+        <a href="https://wa.me/601136661140" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.317.646 4.482 1.77 6.33L4 29l7.86-1.73A11.94 11.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3Zm0 21.818A9.78 9.78 0 0 1 10.9 23.4l-.365-.217-4.664 1.028 1.05-4.548-.238-.373A9.78 9.78 0 0 1 6.18 15c0-5.415 4.406-9.818 9.82-9.818 5.415 0 9.818 4.403 9.818 9.818 0 5.415-4.403 9.818-9.818 9.818Zm5.4-7.352c-.296-.148-1.75-.864-2.022-.963-.271-.099-.469-.148-.667.148-.198.296-.766.963-.94 1.161-.173.198-.346.223-.642.075-.296-.148-1.25-.46-2.38-1.467-.88-.785-1.474-1.754-1.647-2.05-.173-.297-.019-.457.13-.604.133-.133.297-.346.445-.52.148-.173.198-.296.297-.494.099-.198.05-.371-.025-.52-.074-.148-.667-1.608-.914-2.202-.24-.578-.485-.5-.667-.51l-.568-.01a1.09 1.09 0 0 0-.79.37c-.272.297-1.04 1.016-1.04 2.478s1.065 2.874 1.213 3.072c.148.198 2.096 3.2 5.08 4.488.71.306 1.263.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.75-.715 1.997-1.406.247-.692.247-1.285.173-1.407-.074-.123-.272-.198-.568-.346Z"/></svg> Chat with Us</a>
         <a href="book-consultation.html" class="btn btn-outline">Book Consultation</a>
       </div>
     </div>
@@ -249,8 +250,8 @@
         </a>
         <p class="footer-about">Consultant Orthopaedic &amp; Trauma Surgeon at Gleneagles Hospital Kota Kinabalu, providing personalised, evidence-based orthopaedic care for patients across Sabah.</p>
         <div class="footer-social">
-          <a href="https://facebook.com/dharmaortho" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8.5H16l.5-3.5h-3V7.7c0-1 .3-1.7 1.7-1.7H16.6V2.8C16.3 2.7 15.3 2.6 14.1 2.6c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3.5H10V22h3.5Z"/></svg></a>
-          <a href="https://instagram.com/orthodm" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="https://facebook.com/dharmaortho" data-cms-href="contact.facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8.5H16l.5-3.5h-3V7.7c0-1 .3-1.7 1.7-1.7H16.6V2.8C16.3 2.7 15.3 2.6 14.1 2.6c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3.5H10V22h3.5Z"/></svg></a>
+          <a href="https://instagram.com/orthodm" data-cms-href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
         </div>
       </div>
       <div class="footer-col">
@@ -264,7 +265,7 @@
       </div>
       <div class="footer-col">
         <h4>Popular Services</h4>
-        <ul>
+        <ul id="footer-services-list" data-prefix="">
           <li><a href="services/orthopedic-and-trauma-surgery.html">Orthopaedic Trauma Surgery</a></li>
 <li><a href="services/joint-replacement-services.html">Joint Replacement Surgery</a></li>
 <li><a href="services/general-orthopaedic-services.html">General Orthopaedic Services</a></li>
@@ -276,10 +277,10 @@
       <div class="footer-col">
         <h4>Contact</h4>
         <ul>
-          <li>Suite 02-06, Level 6<br>Riverson@Sembulan, Block A-1<br>Lorong Riverson@Sembulan, Off Coastal Highway<br>88100 Kota Kinabalu, Sabah</li>
-          <li><a href="https://wa.me/601136661140" target="_blank" rel="noopener">WhatsApp +60 11-3666 1140</a></li>
-          <li><a href="tel:+6088518879">+60 88-518 879</a></li>
-          <li><a href="mailto:enquiry@dharmaortho.my">enquiry@dharmaortho.my</a></li>
+          <li id="footer-address-lines">Suite 02-06, Level 6<br>Riverson@Sembulan, Block A-1<br>Lorong Riverson@Sembulan, Off Coastal Highway<br>88100 Kota Kinabalu, Sabah</li>
+          <li><a href="https://wa.me/601136661140" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener">WhatsApp <span data-cms="contact.whatsapp_display">+60 11-3666 1140</span></a></li>
+          <li><a href="tel:+6088518879" data-cms-href="contact.phone_href"><span data-cms="contact.phone_display">+60 88-518 879</span></a></li>
+          <li><a href="mailto:enquiry@dharmaortho.my" data-cms-href="contact.email_mailto"><span data-cms="contact.email">enquiry@dharmaortho.my</span></a></li>
         </ul>
       </div>
     </div>
@@ -289,5 +290,5 @@
     </div>
   </div>
 </footer>
-<a class="whatsapp-float" href="https://wa.me/601136661140" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.317.646 4.482 1.77 6.33L4 29l7.86-1.73A11.94 11.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3Zm0 21.818A9.78 9.78 0 0 1 10.9 23.4l-.365-.217-4.664 1.028 1.05-4.548-.238-.373A9.78 9.78 0 0 1 6.18 15c0-5.415 4.406-9.818 9.82-9.818 5.415 0 9.818 4.403 9.818 9.818 0 5.415-4.403 9.818-9.818 9.818Zm5.4-7.352c-.296-.148-1.75-.864-2.022-.963-.271-.099-.469-.148-.667.148-.198.296-.766.963-.94 1.161-.173.198-.346.223-.642.075-.296-.148-1.25-.46-2.38-1.467-.88-.785-1.474-1.754-1.647-2.05-.173-.297-.019-.457.13-.604.133-.133.297-.346.445-.52.148-.173.198-.296.297-.494.099-.198.05-.371-.025-.52-.074-.148-.667-1.608-.914-2.202-.24-.578-.485-.5-.667-.51l-.568-.01a1.09 1.09 0 0 0-.79.37c-.272.297-1.04 1.016-1.04 2.478s1.065 2.874 1.213 3.072c.148.198 2.096 3.2 5.08 4.488.71.306 1.263.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.75-.715 1.997-1.406.247-.692.247-1.285.173-1.407-.074-.123-.272-.198-.568-.346Z"/></svg></a>
-<script src="js/main.js"></script>
+<a class="whatsapp-float" href="https://wa.me/601136661140" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.317.646 4.482 1.77 6.33L4 29l7.86-1.73A11.94 11.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.628 3 16.001 3Zm0 21.818A9.78 9.78 0 0 1 10.9 23.4l-.365-.217-4.664 1.028 1.05-4.548-.238-.373A9.78 9.78 0 0 1 6.18 15c0-5.415 4.406-9.818 9.82-9.818 5.415 0 9.818 4.403 9.818 9.818 0 5.415-4.403 9.818-9.818 9.818Zm5.4-7.352c-.296-.148-1.75-.864-2.022-.963-.271-.099-.469-.148-.667.148-.198.296-.766.963-.94 1.161-.173.198-.346.223-.642.075-.296-.148-1.25-.46-2.38-1.467-.88-.785-1.474-1.754-1.647-2.05-.173-.297-.019-.457.13-.604.133-.133.297-.346.445-.52.148-.173.198-.296.297-.494.099-.198.05-.371-.025-.52-.074-.148-.667-1.608-.914-2.202-.24-.578-.485-.5-.667-.51l-.568-.01a1.09 1.09 0 0 0-.79.37c-.272.297-1.04 1.016-1.04 2.478s1.065 2.874 1.213 3.072c.148.198 2.096 3.2 5.08 4.488.71.306 1.263.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.75-.715 1.997-1.406.247-.692.247-1.285.173-1.407-.074-.123-.272-.198-.568-.346Z"/></svg></a>
+<script src="js/cms-loader.js"></script>
