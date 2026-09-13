@@ -92,9 +92,19 @@ section{ padding:64px 0; }
 /* ---------- Header / Nav ---------- */
 .site-header{
   position:sticky; top:0; z-index:100;
+  border-bottom:1px solid var(--line);
+}
+/* The frosted background lives on a pseudo-element rather than directly on
+   .site-header itself. A backdrop-filter on .site-header would make it a
+   "containing block" for its position:fixed children (.nav-links, the
+   mobile nav-scrim overlay) in most browsers -- meaning the mobile menu
+   panel and its dark overlay would anchor to the header's own (short)
+   height instead of the full screen, causing the menu to visually overlap/
+   cut off partway down. Keeping the filter off .site-header avoids that. */
+.site-header::before{
+  content:''; position:absolute; inset:0; z-index:-1;
   background:rgba(246,247,251,.92);
   backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
 }
 .topbar{
   background:var(--navy-900); color:#cfd8e8; font-size:.82rem;
@@ -151,6 +161,7 @@ section{ padding:64px 0; }
     background:#fff; flex-direction:column; align-items:flex-start; gap:4px;
     padding:90px 26px 26px; box-shadow:var(--shadow-lg);
     transform:translateX(100%); transition:.25s ease; overflow-y:auto;
+    z-index:95; /* above .nav-scrim, so its own links stay tappable */
   }
   .nav-links.open{ transform:translateX(0); }
   .nav-links > a{ width:100%; padding:12px 0; border-bottom:1px solid var(--line); }
