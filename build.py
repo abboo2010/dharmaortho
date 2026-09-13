@@ -376,13 +376,22 @@ GALLERY_CASES = [
 for _c in GALLERY_CASES:
     _c["images"] = [f"{_c['slug']}-{i}.jpg" for i in range(1, _c["count"] + 1)]
 
-# Video Gallery — no videos are live on the source site yet; this ships the
-# section fully built with clearly-labelled placeholders, ready to swap in
-# real videos (YouTube/Facebook embeds or files) the moment they're supplied.
-VIDEO_PLACEHOLDERS = [
-    {"title": "Patient Education", "desc": "Short explainers on common procedures and what to expect."},
-    {"title": "Procedure Walkthroughs", "desc": "A closer look at VELYS™ robotic-assisted surgery in action."},
-    {"title": "Patient Stories", "desc": "Real recovery journeys, in patients' own words."},
+# Video Gallery — real case-highlight videos from Dr. Dharmalingam's own
+# YouTube channel (@DHARMA240), embedded via YouTube's privacy-enhanced player.
+YOUTUBE_CHANNEL = "https://www.youtube.com/@DHARMA240"
+VIDEOS = [
+    {"id": "qVd4bJbRnPA", "title": "A 20-year-old woman presented with a knee injury sustained during netball"},
+    {"id": "_MCxCibJGco", "title": "A 13-year-old with severe low back pain — what's the cause?"},
+    {"id": "xMft-TFGWTk", "title": "A 45-year-old gentleman presented with right groin-to-thigh pain of insidious onset"},
+    {"id": "OHd_6hhK3L8", "title": "Severe knee recurvatum — regaining stability through knee replacement"},
+    {"id": "qZXjEkS6i10", "title": "A 7-year-old boy with a traumatic amputation of the fingertip"},
+    {"id": "IRyvRaUsIig", "title": "A 29-year-old gentleman with persistent pain over the outer side of his right knee"},
+    {"id": "752VoYSd44o", "title": "Avascular necrosis (AVN) of the hip"},
+    {"id": "31p4F72HhuA", "title": "A meniscus tear in a 35-year-old patient"},
+    {"id": "aT3eIgIWa94", "title": "What is Ledderhose disease?"},
+    {"id": "9qveREndO90", "title": "A young patient with osteochondrosis dissecans of the talus"},
+    {"id": "b9C204Gb4Us", "title": "A 21-year-old with an acute knee injury from playing basketball"},
+    {"id": "hwsT-BbfYes", "title": "Charcot neuro-osteoarthropathy (Charcot joint)"},
 ]
 
 # ---------------------------------------------------------------------------
@@ -888,23 +897,23 @@ def gallery_body():
 
     video_cards = "".join(
         f"""
-        <div class="video-card">
+        <button class="video-card" type="button" data-video="{v['id']}" aria-label="Play video: {v['title']}">
           <div class="video-card-media">
+            <img src="https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg" alt="{v['title']}" loading="lazy">
             <span class="play-btn">{icon_svg('play')}</span>
-            <span class="video-badge">Coming Soon</span>
           </div>
           <div class="video-card-body">
             <h3>{v['title']}</h3>
-            <p>{v['desc']}</p>
           </div>
-        </div>"""
-        for v in VIDEO_PLACEHOLDERS
+        </button>"""
+        for v in VIDEOS
     )
 
     gallery_data = json.dumps({
         c["slug"]: {"title": c["title"], "images": [f"/images/gallery/{img}" for img in c["images"]]}
         for c in GALLERY_CASES
     })
+    video_data = json.dumps([{"id": v["id"], "title": v["title"]} for v in VIDEOS])
 
     return f"""
 <section class="service-hero">
@@ -912,7 +921,7 @@ def gallery_body():
     <div class="breadcrumb"><a href="/index.html">Home</a> / <span>Gallery</span></div>
     <div class="eyebrow">Case Highlights</div>
     <h1>Gallery</h1>
-    <p class="lede" style="color:#c9d3e3;">A selection of real clinical cases and procedures. Browse by case below, or check back soon for video walkthroughs.</p>
+    <p class="lede" style="color:#c9d3e3;">A selection of real clinical cases and procedures, plus video case highlights from Dr. Dharmalingam's own YouTube channel.</p>
   </div>
 </section>
 
@@ -933,7 +942,7 @@ def gallery_body():
       <div class="video-grid">
         {video_cards}
       </div>
-      <p class="video-note">Video walkthroughs and patient stories are on the way — check back soon, or ask us on WhatsApp.</p>
+      <p class="video-note">More clinical videos are added regularly on our <a href="{YOUTUBE_CHANNEL}" target="_blank" rel="noopener">YouTube channel</a> — subscribe to stay updated.</p>
     </div>
 
     <div class="card band-cream" style="margin-top:40px;padding:36px;text-align:center;">
@@ -958,7 +967,22 @@ def gallery_body():
   </div>
 </div>
 
+<div class="lightbox" id="video-lightbox" hidden>
+  <div class="lightbox-backdrop" data-close="1"></div>
+  <div class="lightbox-inner">
+    <button class="lightbox-close" type="button" data-close="1" aria-label="Close">{icon_svg('close')}</button>
+    <button class="lightbox-prev" type="button" aria-label="Previous video">{icon_svg('chevron')}</button>
+    <div class="lightbox-video-wrap"><iframe id="video-lightbox-iframe" src="" title="Video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    <button class="lightbox-next" type="button" aria-label="Next video">{icon_svg('chevron')}</button>
+    <div class="lightbox-caption">
+      <span class="lightbox-title" id="video-lightbox-title"></span>
+      <span class="lightbox-count" id="video-lightbox-count"></span>
+    </div>
+  </div>
+</div>
+
 <script id="gallery-data" type="application/json">{gallery_data}</script>
+<script id="video-data" type="application/json">{video_data}</script>
 """.strip()
 
 
