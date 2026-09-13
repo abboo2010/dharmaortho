@@ -168,7 +168,12 @@ section{ padding:64px 0; }
   .dropdown{ position:static; transform:none; box-shadow:none; opacity:1; visibility:visible; display:none; padding:0 0 0 12px; min-width:0; }
   .has-dropdown.open .dropdown{ display:grid; }
   .nav-toggle{ display:block; }
-  .nav-cta .btn span{ display:none; }
+  /* .nav-cta (the "Book Consultation" button) lives inside the slide-out
+     .nav-links panel on mobile, not a cramped top bar -- there's plenty of
+     room, so its label text stays visible instead of being hidden down to
+     an empty pill. */
+  .nav-cta{ width:100%; margin-top:8px; }
+  .nav-cta .btn{ width:100%; }
   body.nav-open{ overflow:hidden; }
   .nav-scrim{ position:fixed; inset:0; background:rgba(12,28,51,.4); opacity:0; visibility:hidden; transition:.2s; z-index:90; }
   .nav-scrim.open{ opacity:1; visibility:visible; }
