@@ -114,6 +114,17 @@ section{ padding:64px 0; }
 .topbar-links{ display:flex; gap:20px; flex-wrap:wrap; }
 .topbar-links a:hover{ color:var(--gold-500); }
 
+/* On narrow screens the WhatsApp/Clinic/email links wrap onto their own
+   lines (they're too long to sit side by side), and the base 20px gap plus
+   the page's 1.65 line-height together left a lot of dead vertical space
+   between each one. Tighten that up so the topbar reads as a compact list
+   rather than three loosely-scattered lines. */
+@media (max-width:640px){
+  .topbar{ font-size:.76rem; }
+  .topbar .container{ gap:2px; padding-top:6px; padding-bottom:6px; }
+  .topbar-links{ gap:4px 14px; row-gap:4px; line-height:1.3; }
+}
+
 .navbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:24px; }
 .brand{ display:flex; align-items:center; gap:12px; }
 .brand-mark{
