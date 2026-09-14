@@ -828,11 +828,6 @@
   }
 
   // ---------------------------------------------------------------------
-  // Tab switching + content loading
-  // ---------------------------------------------------------------------
-
-  var RENDERERS = { hero: renderHero, about: renderAbout, timeline: renderTimeline, services: renderServices, gallery: renderGallery, 'gallery-videos': renderGalleryVideos, contact: renderContact };
-    // ---------------------------------------------------------------------
   // Tab: Home Page Extras (singleton) — feature pills, "What We Treat"
   // section head, "Why Choose Us" checklist, and the bottom CTA banner.
   // ---------------------------------------------------------------------
@@ -876,6 +871,15 @@
     card.appendChild(field('Heading', ctaHeading));
     card.appendChild(field('Text', ctaText));
 
+    card.appendChild(el('h3', { text: '"About the Specialist" section', style: 'margin-top:22px;' }));
+    var aboutEyebrow = textInput(h.about_eyebrow);
+    var aboutHeading = textInput(h.about_heading);
+    card.appendChild(el('div', { class: 'row' }, [field('Eyebrow', aboutEyebrow), field('Heading', aboutHeading)]));
+    var cred1 = textInput(h.credential1), cred2 = textInput(h.credential2), cred3 = textInput(h.credential3);
+    card.appendChild(el('div', { class: 'row' }, [field('Credential chip 1', cred1), field('Credential chip 2', cred2), field('Credential chip 3', cred3)]));
+    var aboutCtaLabel = textInput(h.about_cta_label);
+    card.appendChild(field('Button label (links to the About Dr page)', aboutCtaLabel));
+
     var saveBar = el('div', { class: 'save-bar' }, [
       el('button', { class: 'btn btn-primary', text: 'Save Changes', onclick: function () {
         crud('home_extra', 'update', {
@@ -887,6 +891,9 @@
             why_choose_eyebrow: whyEyebrow.value, why_choose_heading: whyHeading.value,
             why_choose_items: itemInputs.map(function (i) { return i.value; }),
             cta_heading: ctaHeading.value, cta_text: ctaText.value,
+            about_eyebrow: aboutEyebrow.value, about_heading: aboutHeading.value,
+            credential1: cred1.value, credential2: cred2.value, credential3: cred3.value,
+            about_cta_label: aboutCtaLabel.value,
           },
         }).then(function (res) { CONTENT.home_extra = res.row; statusMsg(card, 'Saved.'); })
           .catch(function (e) { statusMsg(card, e.message, true); });
