@@ -71,6 +71,30 @@
         '</div><div>' + escapeHtml(item.description) + '</div></div>';
     }).join('');
   }
+  // ---- Home page extras (feature pills, "What We Treat" heading, Why Choose Us
+  //      checklist, and the bottom "Need an Orthopaedic Consultation?" banner) ----
+  function applyHomeExtra(h) {
+    if (!h) return;
+    text(document.getElementById('pill1-title'), h.pill1_title);
+    text(document.getElementById('pill1-desc'), h.pill1_desc);
+    text(document.getElementById('pill2-title'), h.pill2_title);
+    text(document.getElementById('pill2-desc'), h.pill2_desc);
+    text(document.getElementById('pill3-title'), h.pill3_title);
+    text(document.getElementById('pill3-desc'), h.pill3_desc);
+    text(document.getElementById('services-section-eyebrow'), h.services_eyebrow);
+    text(document.getElementById('services-section-heading'), h.services_heading);
+    text(document.getElementById('services-section-lede'), h.services_lede);
+    text(document.getElementById('why-choose-eyebrow'), h.why_choose_eyebrow);
+    text(document.getElementById('why-choose-heading'), h.why_choose_heading);
+    text(document.getElementById('home-cta-heading'), h.cta_heading);
+    text(document.getElementById('home-cta-text'), h.cta_text);
+    if (Array.isArray(h.why_choose_items) && h.why_choose_items.length) {
+      var spans = document.querySelectorAll('#why-choose-list .why-choose-item');
+      for (var i = 0; i < spans.length && i < h.why_choose_items.length; i++) {
+        text(spans[i], h.why_choose_items[i]);
+      }
+    }
+  }
 
   // ---- Contact info (sitewide: header, footer, contact page, booking, CTAs) ----
   function applyContact(contact) {
