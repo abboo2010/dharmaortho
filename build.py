@@ -566,7 +566,8 @@ def page(title, description, active, body, prefix="", extra_head="", show_splash
 <script>
   (function () {{
     try {{
-      if (sessionStorage.getItem('dharma_splash_seen')) {{
+      var isInstalledApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (sessionStorage.getItem('dharma_splash_seen') || isInstalledApp) {{
         document.documentElement.setAttribute('data-splash', 'seen');
       }}
     }} catch (e) {{}}
@@ -593,17 +594,6 @@ if ('serviceWorker' in navigator) {{
 }}
 </script>
 <link rel="stylesheet" href="{prefix}css/styles.css">
-<link rel="icon" type="image/png" href="{prefix}images/favicon.png">
-<link rel="apple-touch-icon" href="{prefix}images/apple-touch-icon.png">
-<link rel="manifest" href="{prefix}manifest.json">
-<meta name="theme-color" content="#0c1c33">
-<script>
-if ('serviceWorker' in navigator) {{
-  window.addEventListener('load', function () {{
-    navigator.serviceWorker.register('{prefix}sw.js').catch(function () {{}});
-  }});
-}}
-</script>
 <script>window.CMS_PREFIX = "{prefix}";</script>
 {splash_guard}
 {extra_head}
@@ -686,16 +676,16 @@ def home_body():
       <img src="/images/doctor-portrait.png" alt="Dr. Dharmalingam Muthiah" id="home-about-photo">
     </div>
     <div>
-      <div class="eyebrow">About the Specialist</div>
-      <h2>Dr. Dharmalingam Muthiah</h2>
+      <div class="eyebrow" id="home-about-eyebrow">About the Specialist</div>
+      <h2 id="home-about-heading">Dr. Dharmalingam Muthiah</h2>
       <div class="credentials">
-        <span class="credential-chip">MBBS (Malaya)</span>
-        <span class="credential-chip">FRCS (Edinburgh)</span>
-        <span class="credential-chip">Orthopaedic &amp; Trauma Surgeon</span>
+        <span class="credential-chip" id="home-about-credential1">MBBS (Malaya)</span>
+        <span class="credential-chip" id="home-about-credential2">FRCS (Edinburgh)</span>
+        <span class="credential-chip" id="home-about-credential3">Orthopaedic &amp; Trauma Surgeon</span>
       </div>
       <p id="home-about-para1">Dr. Dharmalingam Muthiah is an Orthopaedic and Trauma Surgeon specialising in Joint Replacement and Sports Reconstructive Surgery. He currently practises at the Orthopaedic &amp; Trauma Surgery Clinic, Gleneagles Hospital Kota Kinabalu, providing orthopaedic and trauma care for patients requiring specialist musculoskeletal treatment.</p>
       <p id="home-about-para2">His clinical practice includes the assessment and management of musculoskeletal disorders, traumatic injuries, degenerative joint conditions, sports-related injuries, hand conditions and musculoskeletal tumours.</p>
-      <a href="/about.html" class="btn btn-primary">More About Dr. Dharmalingam {icon_svg('arrow')}</a>
+      <a href="/about.html" class="btn btn-primary"><span id="home-about-cta-label">More About Dr. Dharmalingam</span> {icon_svg('arrow')}</a>
     </div>
   </div>
 </section>
@@ -732,6 +722,7 @@ def home_body():
   </div>
 </section>
 """.strip()
+
 
 def about_body():
     return f"""
