@@ -4,7 +4,7 @@
 // successfully-authenticated user is treated as an admin.
 //
 // Request body (POST, JSON): { collection, op, id?, data?, order? }
-//   collection: 'hero' | 'about' | 'contact' | 'timeline' | 'services' | 'gallery' | 'gallery_videos'
+//   collection: 'hero' | 'about' | 'contact' | 'timeline' | 'services' | 'gallery' | 'gallery_videos' | 'home_extra'
 //   op:
 //     'update'  — singleton: { data }               list: { id, data }
 //     'create'  — list only: { data }
@@ -52,6 +52,13 @@ const COLLECTIONS = {
     // public Supabase Storage URL from cms-video-upload-url.js. thumbnail_url is
     // optional in both cases — YouTube videos default to their own thumbnail.
     fields: ['source', 'youtube_id', 'video_url', 'thumbnail_url', 'title', 'sort_order'],
+  },
+  home_extra: {
+    table: 'cms_home_extra', type: 'singleton', idValue: 1,
+    fields: ['pill1_title', 'pill1_desc', 'pill2_title', 'pill2_desc', 'pill3_title', 'pill3_desc',
+      'services_eyebrow', 'services_heading', 'services_lede',
+      'why_choose_eyebrow', 'why_choose_heading', 'why_choose_items',
+      'cta_heading', 'cta_text'],
   },
 };
 
