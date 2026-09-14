@@ -256,7 +256,9 @@
       applyTimeline(data.timeline);
       applyContact(data.contact);
       applyServices(data.services); // also handles the current service detail page, if any
-      applyGallery(data.gallery);
+            applyGallery(data.gallery);
+      applyGalleryVideos(data.gallery_videos);
+      applyHomeExtra(data.home_extra);
     } catch (e) {
       // Never let a CMS-overlay bug break the page — static fallback content stays visible.
       if (window.console && console.error) console.error('cms-loader: failed to apply content', e);
