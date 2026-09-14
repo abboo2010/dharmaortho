@@ -832,6 +832,76 @@
   // ---------------------------------------------------------------------
 
   var RENDERERS = { hero: renderHero, about: renderAbout, timeline: renderTimeline, services: renderServices, gallery: renderGallery, 'gallery-videos': renderGalleryVideos, contact: renderContact };
+    // ---------------------------------------------------------------------
+  // Tab: Home Page Extras (singleton) — feature pills, "What We Treat"
+  // section head, "Why Choose Us" checklist, and the bottom CTA banner.
+  // ---------------------------------------------------------------------
+
+  function renderHomeExtra() {
+    var h = CONTENT.home_extra || {};
+    mainEl.innerHTML = '';
+    mainEl.appendChild(el('h2', { text: 'Home Page Extras' }));
+    mainEl.appendChild(el('p', { class: 'hint', text: 'The feature pills, "What We Treat" intro, "Why Choose Us" checklist, and consultation banner on the homepage.' }));
+
+    var card = el('div', { class: 'card' });
+
+    card.appendChild(el('h3', { text: 'Feature pills (under the hero)' }));
+    var p1t = textInput(h.pill1_title), p1d = textArea(h.pill1_desc, 2);
+    var p2t = textInput(h.pill2_title), p2d = textArea(h.pill2_desc, 2);
+    var p3t = textInput(h.pill3_title), p3d = textArea(h.pill3_desc, 2);
+    card.appendChild(el('div', { class: 'row' }, [field('Pill 1 — title', p1t), field('Pill 1 — description', p1d)]));
+    card.appendChild(el('div', { class: 'row' }, [field('Pill 2 — title', p2t), field('Pill 2 — description', p2d)]));
+    card.appendChild(el('div', { class: 'row' }, [field('Pill 3 — title', p3t), field('Pill 3 — description', p3d)]));
+
+    card.appendChild(el('h3', { text: '"What We Treat" section', style: 'margin-top:22px;' }));
+    var svcEyebrow = textInput(h.services_eyebrow);
+    var svcHeading = textInput(h.services_heading);
+    var svcLede = textArea(h.services_lede, 3);
+    card.appendChild(el('div', { class: 'row' }, [field('Eyebrow', svcEyebrow), field('Heading', svcHeading)]));
+    card.appendChild(field('Description', svcLede));
+
+    card.appendChild(el('h3', { text: 'Why Choose Us', style: 'margin-top:22px;' }));
+    var whyEyebrow = textInput(h.why_choose_eyebrow);
+    var whyHeading = textInput(h.why_choose_heading);
+    card.appendChild(el('div', { class: 'row' }, [field('Eyebrow', whyEyebrow), field('Heading', whyHeading)]));
+    var items = (h.why_choose_items && h.why_choose_items.length === 6) ? h.why_choose_items : ['', '', '', '', '', ''];
+    var itemInputs = items.map(function (v) { return textInput(v); });
+    card.appendChild(el('div', { class: 'row' }, [field('Checklist item 1', itemInputs[0]), field('Checklist item 2', itemInputs[1])]));
+    card.appendChild(el('div', { class: 'row' }, [field('Checklist item 3', itemInputs[2]), field('Checklist item 4', itemInputs[3])]));
+    card.appendChild(el('div', { class: 'row' }, [field('Checklist item 5', itemInputs[4]), field('Checklist item 6', itemInputs[5])]));
+
+    card.appendChild(el('h3', { text: 'Consultation banner', style: 'margin-top:22px;' }));
+    var ctaHeading = textInput(h.cta_heading);
+    var ctaText = textArea(h.cta_text, 2);
+    card.appendChild(field('Heading', ctaHeading));
+    card.appendChild(field('Text', ctaText));
+
+    var saveBar = el('div', { class: 'save-bar' }, [
+      el('button', { class: 'btn btn-primary', text: 'Save Changes', onclick: function () {
+        crud('home_extra', 'update', {
+          data: {
+            pill1_title: p1t.value, pill1_desc: p1d.value,
+            pill2_title: p2t.value, pill2_desc: p2d.value,
+            pill3_title: p3t.value, pill3_desc: p3d.value,
+            services_eyebrow: svcEyebrow.value, services_heading: svcHeading.value, services_lede: svcLede.value,
+            why_choose_eyebrow: whyEyebrow.value, why_choose_heading: whyHeading.value,
+            why_choose_items: itemInputs.map(function (i) { return i.value; }),
+            cta_heading: ctaHeading.value, cta_text: ctaText.value,
+          },
+        }).then(function (res) { CONTENT.home_extra = res.row; statusMsg(card, 'Saved.'); })
+          .catch(function (e) { statusMsg(card, e.message, true); });
+      } }),
+      el('span', { class: 'save-status' }),
+    ]);
+    card.appendChild(saveBar);
+    mainEl.appendChild(card);
+  }
+
+  // ---------------------------------------------------------------------
+  // Tab switching + content loading
+  // ---------------------------------------------------------------------
+
+  var RENDERERS = { hero: renderHero, 'home-extra': renderHomeExtra, about: renderAbout, timeline: renderTimeline, services: renderServices, gallery: renderGallery, 'gallery-videos': renderGalleryVideos, contact: renderContact };
 
   sidebar.addEventListener('click', function (e) {
     var btn = e.target.closest('button[data-tab]');
