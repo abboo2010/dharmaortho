@@ -61,16 +61,6 @@
     if (homePhoto && about.photo_url) homePhoto.src = about.photo_url;
   }
 
-  // ---- Timeline (About Dr page) ----
-  function applyTimeline(items) {
-    var wrap = document.getElementById('about-timeline');
-    if (!wrap || !items || !items.length) return;
-    var sorted = items.slice().sort(function (a, b) { return a.sort_order - b.sort_order; });
-    wrap.innerHTML = sorted.map(function (item) {
-      return '<div class="timeline-item"><div class="place">' + escapeHtml(item.place) +
-        '</div><div>' + escapeHtml(item.description) + '</div></div>';
-    }).join('');
-  }
   // ---- Home page extras (feature pills, "What We Treat" heading, Why Choose Us
   //      checklist, and the bottom "Need an Orthopaedic Consultation?" banner) ----
   function applyHomeExtra(h) {
@@ -94,6 +84,23 @@
         text(spans[i], h.why_choose_items[i]);
       }
     }
+    text(document.getElementById('home-about-eyebrow'), h.about_eyebrow);
+    text(document.getElementById('home-about-heading'), h.about_heading);
+    text(document.getElementById('home-about-credential1'), h.credential1);
+    text(document.getElementById('home-about-credential2'), h.credential2);
+    text(document.getElementById('home-about-credential3'), h.credential3);
+    text(document.getElementById('home-about-cta-label'), h.about_cta_label);
+  }
+
+  // ---- Timeline (About Dr page) ----
+  function applyTimeline(items) {
+    var wrap = document.getElementById('about-timeline');
+    if (!wrap || !items || !items.length) return;
+    var sorted = items.slice().sort(function (a, b) { return a.sort_order - b.sort_order; });
+    wrap.innerHTML = sorted.map(function (item) {
+      return '<div class="timeline-item"><div class="place">' + escapeHtml(item.place) +
+        '</div><div>' + escapeHtml(item.description) + '</div></div>';
+    }).join('');
   }
 
   // ---- Contact info (sitewide: header, footer, contact page, booking, CTAs) ----
@@ -241,6 +248,31 @@
     }
   }
 
+  // ---- Gallery videos (video grid + lightbox data) ----
+  function applyGalleryVideos(videos) {
+    var grid = document.getElementById('gallery-video-grid');
+    var dataEl = document.getElementById('video-data');
+    if (!grid || !videos || !videos.length) return;
+    var sorted = videos.slice().sort(function (a, b) { return a.sort_order - b.sort_order; });
+
+    grid.innerHTML = sorted.map(function (v) {
+      var thumb = v.source === 'upload' ? (v.thumbnail_url || '') : ('https://i.ytimg.com/vi/' + encodeURIComponent(v.youtube_id || '') + '/hqdefault.jpg');
+      var media = thumb
+        ? '<div class="video-card-media"><img src="' + escapeAttr(thumb) + '" alt="' + escapeAttr(v.title) + '" loading="lazy"><span class="play-btn">' + PLAY_ICON + '</span></div>'
+        : '<div class="video-card-media no-thumb"><span class="play-btn">' + PLAY_ICON + '</span></div>';
+      return '<button class="video-card" type="button" data-video="' + escapeAttr(v.id) + '" aria-label="Play video: ' + escapeAttr(v.title) + '">' +
+        media + '<div class="video-card-body"><h3>' + escapeHtml(v.title) + '</h3></div></button>';
+    }).join('');
+
+    if (dataEl) {
+      var videoData = sorted.map(function (v) {
+        return { id: v.id, title: v.title, source: v.source, youtube_id: v.youtube_id || '', video_url: v.video_url || '' };
+      });
+      dataEl.textContent = JSON.stringify(videoData);
+    }
+  }
+  var PLAY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l14-8L6 4z" fill="currentColor" stroke="none"/></svg>';
+
   function escapeHtml(str) {
     if (str === undefined || str === null) return '';
     return String(str).replace(/[&<>"']/g, function (c) {
@@ -256,7 +288,7 @@
       applyTimeline(data.timeline);
       applyContact(data.contact);
       applyServices(data.services); // also handles the current service detail page, if any
-            applyGallery(data.gallery);
+      applyGallery(data.gallery);
       applyGalleryVideos(data.gallery_videos);
       applyHomeExtra(data.home_extra);
     } catch (e) {
