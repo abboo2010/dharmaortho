@@ -658,18 +658,18 @@ def home_body():
 
 <div class="pill-row">
   <div class="container">
-    <div class="pill">{icon_svg('spark')}<span><b>Greater Precision</b><br>Optimised implant positioning for improved alignment and long-term performance.</span></div>
-    <div class="pill">{icon_svg('heart')}<span><b>Less Pain</b><br>Minimally invasive techniques preserve healthy tissue and ease recovery.</span></div>
-    <div class="pill">{icon_svg('clock')}<span><b>Faster Recovery</b><br>Return to everyday activities sooner, with greater confidence.</span></div>
+    <div class="pill">{icon_svg('spark')}<span><b id="pill1-title">Greater Precision</b><br><span id="pill1-desc">Optimised implant positioning for improved alignment and long-term performance.</span></span></div>
+    <div class="pill">{icon_svg('heart')}<span><b id="pill2-title">Less Pain</b><br><span id="pill2-desc">Minimally invasive techniques preserve healthy tissue and ease recovery.</span></span></div>
+    <div class="pill">{icon_svg('clock')}<span><b id="pill3-title">Faster Recovery</b><br><span id="pill3-desc">Return to everyday activities sooner, with greater confidence.</span></span></div>
   </div>
 </div>
 
 <section class="band">
   <div class="container">
     <div class="section-head">
-      <div class="eyebrow center">What We Treat</div>
-      <h2>Comprehensive Orthopaedic Care</h2>
-      <p class="lede center">At our clinic, we are committed to providing comprehensive orthopaedic care using modern techniques and evidence-based treatments — restoring mobility, relieving pain and improving quality of life for patients of all ages.</p>
+      <div class="eyebrow center" id="services-section-eyebrow">What We Treat</div>
+      <h2 id="services-section-heading">Comprehensive Orthopaedic Care</h2>
+      <p class="lede center" id="services-section-lede">At our clinic, we are committed to providing comprehensive orthopaedic care using modern techniques and evidence-based treatments — restoring mobility, relieving pain and improving quality of life for patients of all ages.</p>
     </div>
     <div class="services-grid" id="home-services-grid">
       {preview_cards}
@@ -703,16 +703,16 @@ def home_body():
 <section class="band-navy">
   <div class="container">
     <div class="section-head">
-      <div class="eyebrow center">Why Choose Us</div>
-      <h2>Committed to Patient-Centred Care</h2>
+      <div class="eyebrow center" id="why-choose-eyebrow">Why Choose Us</div>
+      <h2 id="why-choose-heading">Committed to Patient-Centred Care</h2>
     </div>
-    <ul class="checklist" style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px 40px;">
-      <li>{icon_svg('check')} Comprehensive Orthopaedic Care</li>
-      <li>{icon_svg('check')} Personalised Treatment Plans</li>
-      <li>{icon_svg('check')} Evidence-Based Medical Practice</li>
-      <li>{icon_svg('check')} Modern Surgical Techniques</li>
-      <li>{icon_svg('check')} Compassionate Patient Care</li>
-      <li>{icon_svg('check')} Trusted Orthopaedic Expertise</li>
+    <ul class="checklist" id="why-choose-list" style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px 40px;">
+      <li>{icon_svg('check')} <span class="why-choose-item">Comprehensive Orthopaedic Care</span></li>
+      <li>{icon_svg('check')} <span class="why-choose-item">Personalised Treatment Plans</span></li>
+      <li>{icon_svg('check')} <span class="why-choose-item">Evidence-Based Medical Practice</span></li>
+      <li>{icon_svg('check')} <span class="why-choose-item">Modern Surgical Techniques</span></li>
+      <li>{icon_svg('check')} <span class="why-choose-item">Compassionate Patient Care</span></li>
+      <li>{icon_svg('check')} <span class="why-choose-item">Trusted Orthopaedic Expertise</span></li>
     </ul>
   </div>
 </section>
@@ -721,8 +721,8 @@ def home_body():
   <div class="container">
     <div class="cta-strip">
       <div>
-        <h2>Need an Orthopaedic Consultation?</h2>
-        <p>Our friendly team is ready to assist you with appointments, enquiries and information about our orthopaedic services.</p>
+        <h2 id="home-cta-heading">Need an Orthopaedic Consultation?</h2>
+        <p id="home-cta-text">Our friendly team is ready to assist you with appointments, enquiries and information about our orthopaedic services.</p>
       </div>
       <div class="cta-actions">
         <a href="{CONTACT['whatsapp_href']}" data-cms-href="contact.whatsapp_href" target="_blank" rel="noopener" class="btn btn-whatsapp">{icon_svg('whatsapp')} Chat with Us</a>
@@ -732,7 +732,6 @@ def home_body():
   </div>
 </section>
 """.strip()
-
 
 def about_body():
     return f"""
