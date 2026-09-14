@@ -53,12 +53,13 @@ const COLLECTIONS = {
     // optional in both cases — YouTube videos default to their own thumbnail.
     fields: ['source', 'youtube_id', 'video_url', 'thumbnail_url', 'title', 'sort_order'],
   },
-  home_extra: {
+    home_extra: {
     table: 'cms_home_extra', type: 'singleton', idValue: 1,
     fields: ['pill1_title', 'pill1_desc', 'pill2_title', 'pill2_desc', 'pill3_title', 'pill3_desc',
       'services_eyebrow', 'services_heading', 'services_lede',
       'why_choose_eyebrow', 'why_choose_heading', 'why_choose_items',
-      'cta_heading', 'cta_text'],
+      'cta_heading', 'cta_text',
+      'about_eyebrow', 'about_heading', 'credential1', 'credential2', 'credential3', 'about_cta_label'],
   },
 };
 
