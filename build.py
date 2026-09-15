@@ -727,7 +727,7 @@ def about_body():
     <div class="breadcrumb"><a href="/index.html">Home</a> / <span>About Dr</span></div>
     <div class="eyebrow">About the Specialist</div>
     <h1>Meet Dr. Dharmalingam Muthiah</h1>
-    <p class="lede" style="color:#c9d3e3;" id="about-credentials-line">MBBS (Malaya), FRCS (Edinburgh) — Consultant Orthopaedic &amp; Trauma Surgeon</p>
+    <p class="lede" style="color:#c9d3e3;" id="about-credentials-line">Consultant Orthopaedic &amp; Trauma Surgeon &mdash; MBBS (Malaya), ChM (Ortho and Trauma, Distinction) (Edin), FRCS (Edin), Dip. in Infectious Diseases (Ireland)</p>
   </div>
 </section>
 
