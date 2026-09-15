@@ -678,11 +678,7 @@ def home_body():
     <div>
       <div class="eyebrow" id="home-about-eyebrow">About the Specialist</div>
       <h2 id="home-about-heading">Dr. Dharmalingam Muthiah</h2>
-      <div class="credentials">
-        <span class="credential-chip" id="home-about-credential1">MBBS (Malaya)</span>
-        <span class="credential-chip" id="home-about-credential2">FRCS (Edinburgh)</span>
-        <span class="credential-chip" id="home-about-credential3">Orthopaedic &amp; Trauma Surgeon</span>
-      </div>
+      <p class="credentials-line" id="home-about-credentials-line">Consultant Orthopaedic &amp; Trauma Surgeon &mdash; MBBS (Malaya), ChM (Ortho and Trauma, Distinction) (Edin), FRCS (Edin), Dip. in Infectious Diseases (Ireland)</p>
       <p id="home-about-para1">Dr. Dharmalingam Muthiah is an Orthopaedic and Trauma Surgeon specialising in Joint Replacement and Sports Reconstructive Surgery. He currently practises at the Orthopaedic &amp; Trauma Surgery Clinic, Gleneagles Hospital Kota Kinabalu, providing orthopaedic and trauma care for patients requiring specialist musculoskeletal treatment.</p>
       <p id="home-about-para2">His clinical practice includes the assessment and management of musculoskeletal disorders, traumatic injuries, degenerative joint conditions, sports-related injuries, hand conditions and musculoskeletal tumours.</p>
       <a href="/about.html" class="btn btn-primary"><span id="home-about-cta-label">More About Dr. Dharmalingam</span> {icon_svg('arrow')}</a>
