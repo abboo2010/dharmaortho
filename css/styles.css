@@ -196,8 +196,8 @@ section{ padding:64px 0; }
   background:linear-gradient(180deg,var(--navy-900) 0%, var(--navy-800) 60%, var(--navy-700) 100%);
   color:#fff; padding:40px 0 0;
 }
-.hero .container{ display:grid; grid-template-columns:1.05fr .95fr; gap:40px; align-items:center; }
-.hero-copy{ padding:16px 0 40px; }
+.hero .container{ position:relative; }
+.hero-copy{ padding:16px 0 40px; max-width:600px; }
 .hero .eyebrow{ color:var(--gold-500); }
 .hero h1{ color:#fff; }
 .hero h1 em{ font-style:normal; color:var(--gold-500); }
@@ -206,19 +206,27 @@ section{ padding:64px 0; }
 .hero-stats{ display:flex; gap:34px; margin-top:44px; flex-wrap:wrap; }
 .hero-stats div b{ display:block; font-family:'Fraunces',serif; font-size:1.7rem; color:#fff; }
 .hero-stats div span{ font-size:.82rem; color:#9fb0c8; }
-.hero-media{ position:relative; align-self:center; }
-.hero-media img{ display:block; width:100%; max-width:480px; margin:0 auto; position:relative; z-index:2; }
-.hero-media::before{
-  content:''; position:absolute; inset:8% 6% -4%; border-radius:40% 40% 0 0;
-  background:radial-gradient(circle at 50% 30%, rgba(201,154,79,.28), transparent 60%);
-  z-index:1;
+@media (min-width:981px){
+  .hero .container{ --hero-media-w:clamp(380px, 42vw, 560px); padding-right:calc(var(--hero-media-w) + 24px); min-height:560px; }
+  .hero-media{ position:absolute; top:0; right:0; bottom:0; width:var(--hero-media-w); }
+  .hero-media img{ display:block; width:100%; height:100%; object-fit:cover; object-position:50% 15%; position:relative; z-index:2; }
+  .hero-media::before{
+    content:''; position:absolute; inset:8% -6% -4% 6%; border-radius:40% 40% 0 0;
+    background:radial-gradient(circle at 50% 30%, rgba(201,154,79,.28), transparent 60%);
+    z-index:1;
+  }
 }
 @media (max-width:980px){
-  .hero .container{ grid-template-columns:1fr; }
-  .hero-copy{ padding-bottom:20px; text-align:center; }
+  .hero-copy{ padding-bottom:20px; text-align:center; max-width:none; }
   .hero-cta{ justify-content:center; }
   .hero-stats{ justify-content:center; }
-  .hero-media{ padding-bottom:20px; }
+  .hero-media{ position:relative; padding-bottom:20px; }
+  .hero-media img{ display:block; width:100%; max-width:480px; margin:0 auto; position:relative; z-index:2; }
+  .hero-media::before{
+    content:''; position:absolute; inset:8% 6% -4%; border-radius:40% 40% 0 0;
+    background:radial-gradient(circle at 50% 30%, rgba(201,154,79,.28), transparent 60%);
+    z-index:1;
+  }
 }
 
 /* ---------- Feature pills row (why choose us on hero) ---------- */
@@ -263,6 +271,7 @@ section{ padding:64px 0; }
 .about-media img{ display:block; position:relative; z-index:1; filter:drop-shadow(0 20px 40px rgba(17,41,75,0.18)); }
 .credentials{ display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 22px; }
 .credential-chip{ background:var(--cream-deep); border:1px solid var(--line); color:var(--navy-800); font-size:.82rem; font-weight:600; padding:8px 14px; border-radius:999px; }
+.credentials-line{ color:var(--navy-800); font-weight:600; font-size:.95rem; margin:18px 0 22px; }
 .checklist{ list-style:none; margin:0; padding:0; display:grid; gap:12px; }
 .checklist li{ display:flex; gap:12px; align-items:flex-start; color:var(--ink-soft); }
 .checklist li svg{ flex:none; width:20px; height:20px; color:var(--gold-600); margin-top:2px; }
@@ -543,12 +552,9 @@ body.splash-active{ overflow:hidden; }
   opacity:0; animation:splashFadeUp .6s ease forwards; animation-delay:1.7s;
 }
 @media (max-width:600px){
-  .splash-logo{
-  width:96px; height:96px; border-radius:50%; background:#fff; padding:2px;
-  object-fit:cover;
-  box-shadow:0 18px 40px rgba(0,0,0,.35);
-  opacity:0; transform:scale(.6);
-  animation:splashLogoIn .9s cubic-bezier(.22,.9,.35,1.3) forwards;
+  .splash-logo{ width:76px; height:76px; }
+  .splash-photo{ max-width:190px; margin-top:20px; }
+  .splash-name .splash-title{ font-size:1.2rem; }
 }
 
 /* ---------- Utility ---------- */
