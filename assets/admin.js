@@ -875,8 +875,8 @@
     var aboutEyebrow = textInput(h.about_eyebrow);
     var aboutHeading = textInput(h.about_heading);
     card.appendChild(el('div', { class: 'row' }, [field('Eyebrow', aboutEyebrow), field('Heading', aboutHeading)]));
-    var cred1 = textInput(h.credential1), cred2 = textInput(h.credential2), cred3 = textInput(h.credential3);
-    card.appendChild(el('div', { class: 'row' }, [field('Credential chip 1', cred1), field('Credential chip 2', cred2), field('Credential chip 3', cred3)]));
+    var cred1 = textArea(h.credential1, 2);
+    card.appendChild(field('Credentials line', cred1));
     var aboutCtaLabel = textInput(h.about_cta_label);
     card.appendChild(field('Button label (links to the About Dr page)', aboutCtaLabel));
 
@@ -892,7 +892,7 @@
             why_choose_items: itemInputs.map(function (i) { return i.value; }),
             cta_heading: ctaHeading.value, cta_text: ctaText.value,
             about_eyebrow: aboutEyebrow.value, about_heading: aboutHeading.value,
-            credential1: cred1.value, credential2: cred2.value, credential3: cred3.value,
+            credential1: cred1.value,
             about_cta_label: aboutCtaLabel.value,
           },
         }).then(function (res) { CONTENT.home_extra = res.row; statusMsg(card, 'Saved.'); })
