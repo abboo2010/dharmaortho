@@ -86,9 +86,10 @@
     }
     text(document.getElementById('home-about-eyebrow'), h.about_eyebrow);
     text(document.getElementById('home-about-heading'), h.about_heading);
-    text(document.getElementById('home-about-credential1'), h.credential1);
-    text(document.getElementById('home-about-credential2'), h.credential2);
-    text(document.getElementById('home-about-credential3'), h.credential3);
+    // The old 3-chip layout used credential1/2/3; the homepage now shows a
+    // single credentials line, so we repurpose the credential1 column to
+    // hold the whole line (avoids a further DB migration).
+    text(document.getElementById('home-about-credentials-line'), h.credential1);
     text(document.getElementById('home-about-cta-label'), h.about_cta_label);
   }
 
